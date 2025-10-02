@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (TR uyumlu, latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Takas Koordinasyonu</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930" />
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    .trade-session-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .session-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .session-status {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .status-coordination { background: rgba(245, 158, 11, 0.2); color: #d97706; }
+    .status-meeting_arranged { background: rgba(16, 185, 129, 0.2); color: #059669; }
+    .status-shipping_arranged { background: rgba(59, 130, 246, 0.2); color: #2563eb; }
+    .status-seller_shipped { background: rgba(139, 92, 246, 0.2); color: #7c3aed; }
+    .status-buyer_shipped { background: rgba(139, 92, 246, 0.2); color: #7c3aed; }
+    .status-both_shipped { background: rgba(16, 185, 129, 0.2); color: #059669; }
+    .status-completed { background: rgba(34, 197, 94, 0.2); color: #16a34a; }
+    .status-cancelled { background: rgba(107, 114, 128, 0.2); color: #6b7280; }
+
+    .session-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .session-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .session-card h3 {
+      color: #1a202c;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .listing-info {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .listing-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 0.75rem;
+      object-fit: cover;
+      border: 2px solid #f1f5f9;
+    }
+
+    .listing-details h4 {
+      margin: 0 0 0.5rem 0;
+      color: #1a202c;
+      font-size: 1.1rem;
+    }
+
+    .trade-details {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .party-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .party-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .meeting-form {
+      background: #f8fafc;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+
+    .btn-outline-success {
+      background: transparent;
+      color: #10b981;
+      border: 2px solid #10b981;
+    }
+
+    .btn-outline-success:hover {
+      background: #10b981;
+      color: white;
+    }
+
+    .confirmation-section {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #67e8f9;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .confirmation-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .alert-info {
+      background: rgba(59, 130, 246, 0.1);
+      color: #2563eb;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #6b7280;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .session-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .session-card {
+        padding: 1.5rem;
+      }
+
+      .confirmation-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <main class="trade-session-container">
+    <div id="sessionLoading" class="loading">
+      <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+      <p>Takas detayları yükleniyor...</p>
+    </div>
+
+    <div id="sessionContent" style="display: none;">
+      <!-- Header bölümü JavaScript ile doldurulacak -->
+      <div id="sessionHeader"></div>
+
+      <!-- Ana içerik -->
+      <div class="session-grid">
+        <div class="session-card">
+          <h3><i class="fas fa-box"></i> İlan Detayları</h3>
+          <div id="listingInfo"></div>
+        </div>
+
+        <div class="session-card">
+          <h3><i class="fas fa-exchange-alt"></i> Takas Detayları</h3>
+          <div id="tradeInfo"></div>
+        </div>
+      </div>
+
+      <!-- Buluşma planlama -->
+      <div id="meetingSection"></div>
+
+      <!-- Takas tamamlama -->
+      <div id="confirmationSection"></div>
+    </div>
+
+    <div id="sessionError" style="display: none;" class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      Takas session bilgisi alınamadı. Lütfen sayfayı yenileyin.
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <!-- Bootstrap JS loaded in header.html -->
+  <!-- Load core fallback functions first -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+
+  <!-- Load smart dependency manager -->
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <!-- Page-specific scripts -->
+  <script src="/js/pages/trade-session.js"></script>
+
+  <script>
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    // Initialize when dependencies are loaded or fallback
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for trade-session page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (latin-ext) + Poppins for titles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>İlan Detayı | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <!-- Use same CSS as other working pages -->
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+  <link rel="stylesheet" href="/css/listing-detail.css?v=20250930">
+
+  <style>
+    /* Loading and error states */
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+    }
+
+    .error {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #ef4444;
+    }
+
+    .not-found {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+    }
+
+    /* Quick fixes for responsive listing grid */
+    .listing-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .listing-grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+
+    @media (max-width: 992px) {
+      .listing-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+
+    /* Action buttons styling */
+    .action-buttons {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-action {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-cart { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+    .btn-buy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+    .btn-trade { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; }
+    .btn-fav { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Owner actions */
+    .owner-action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-outline {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #667eea;
+      background: transparent;
+      color: #667eea;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-danger {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    .btn-danger:hover {
+      background: #ef4444;
+      color: white;
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <!-- Loading State -->
+  <div id="loading" class="loading">
+    <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+    <p>İlan yükleniyor...</p>
+  </div>
+
+  <!-- Error State -->
+  <div id="error" class="error" style="display: none;">
+    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+    <h3>Hata Oluştu</h3>
+    <p id="errorMessage">İlan yüklenirken bir hata oluştu.</p>
+    <a href="/" class="btn btn-primary mt-3">Ana Sayfaya Dön</a>
+  </div>
+
+  <!-- Not Found State -->
+  <div id="notFound" class="not-found" style="display: none;">
+    <i class="fas fa-search fa-3x mb-3"></i>
+    <h3>İlan Bulunamadı</h3>
+    <p>Aradığınız ilan mevcut değil veya kaldırılmış olabilir.</p>
+    <a href="/" class="btn btn-primary mt-3">Ana Sayfaya Dön</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="listing-container" id="mainContent" style="display: none;">
+    <div class="listing-grid">
+      <!-- Left: Product Details -->
+      <article class="listing-card">
+        <div class="gallery-container" id="gallery"></div>
+        <div class="listing-content">
+          <h1 id="title" class="listing-title"></h1>
+          <div class="listing-meta" id="meta"></div>
+          <div class="listing-price" id="price"></div>
+          <div id="badges" class="listing-badges"></div>
+          <div id="desc" class="listing-description"></div>
+
+          <div class="action-buttons">
+            <!-- Owner actions (only listing owner sees this) -->
+            <div id="ownerActions" class="owner-action-buttons" style="display:none;">
+              <a id="btnEdit" class="btn-outline">
+                <i class="fas fa-edit"></i>Düzenle
+              </a>
+              <button id="btnDelete" class="btn-outline btn-danger" onclick="deleteListing()">
+                <i class="fas fa-trash"></i>Sil
+              </button>
+            </div>
+
+            <!-- Public actions -->
+            <div id="publicActions" class="public-action-buttons">
+              <button id="btnAddToCart" class="btn-action btn-cart btn-add-to-cart" data-add-to-cart data-listing-id="">
+                <i class="fas fa-shopping-cart"></i>Sepete Ekle
+              </button>
+              <button id="btnBuy" class="btn-action btn-buy" onclick="buyNow()">
+                <i class="fas fa-bolt"></i>Hemen Al
+              </button>
+              <button id="btnTrade" class="btn-action btn-trade" onclick="proposeTrade()">
+                <i class="fas fa-exchange-alt"></i>Takas Teklif Et
+              </button>
+              <button id="btnFav" class="btn-action btn-fav" onclick="toggleFavorite()">
+                <i class="far fa-heart"></i>Favoriye Ekle
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Right: Seller Card -->
+      <aside class="seller-card">
+        <div class="seller-avatar-line">
+          <img id="sellerAvatar" class="seller-avatar" alt="Satıcı avatarı" />
+        </div>
+        <div class="seller-shop-name">
+          <span id="sellerShopName">Dükkan Adı</span>
+        </div>
+        <div class="seller-name-line">
+          <span id="sellerName">—</span>
+          <span id="sellerUsername" style="display:none;">—</span>
+        </div>
+        <div class="seller-info-line">
+          <div class="seller-member-since" id="sellerMemberSince">Üyelik tarihi yükleniyor...</div>
+          <span id="sellerVerified" class="verified-badge" style="display: none;">
+            <i class="fas fa-check-circle"></i>Doğrulandı
+          </span>
+        </div>
+        <div class="seller-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="sellerRating">—</span>
+            <span class="stat-label">Puan</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="sellerSales">0</span>
+            <span class="stat-label">Satış</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="sellerCity">—</span>
+            <span class="stat-label">Şehir</span>
+          </div>
+        </div>
+        <div class="seller-action-line">
+          <a id="btnMessageSeller" class="btn btn-primary">
+            <i class="fas fa-envelope"></i>Mesaj Gönder
+          </a>
+        </div>
+        <div class="seller-action-line">
+          <a id="btnSellerListings" class="btn-outline">
+            <i class="fas fa-store"></i>Tüm İlanları
+          </a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Same loading system as other working pages -->
+  <script src="/js/config.js"></script>
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener("dependenciesLoaded", () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts("listing");
+      }
+    });
+
+    // Initialize page when dependencies are loaded
+    function initializePage() {
+      console.log('🎯 Initializing listing page with header/footer');
+
+      // Initialize header
+      if (window.bootHeader) {
+        console.log('🔒 Booting header for listing page');
+        window.bootHeader();
+      }
+
+      // Load partials
+      if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    // Add functions to manage loading/content states for existing listing.js
+    window.showListingContent = function() {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('notFound').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    };
+
+    window.showListingError = function(message) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('notFound').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      if (message) {
+        document.getElementById('errorMessage').textContent = message;
+      }
+    };
+
+    window.showListingNotFound = function() {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('notFound').style.display = 'block';
+    };
+
+    // Watch for content to be populated and show immediately
+    function checkForContent() {
+      const title = document.getElementById('title');
+      const sellerName = document.getElementById('sellerName');
+
+      // If title has content, the listing has loaded
+      if (title && title.textContent && title.textContent.trim() !== '') {
+        showListingContent();
+        updateCartButton();
+        return;
+      }
+
+      // If seller name has real content (not "—"), the listing has loaded
+      if (sellerName && sellerName.textContent && sellerName.textContent.trim() !== '—') {
+        showListingContent();
+        updateCartButton();
+        return;
+      }
+
+      // Check again in 100ms
+      setTimeout(checkForContent, 100);
+    }
+
+    // Update cart button with listing ID
+    function updateCartButton() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const slug = urlParams.get('slug');
+      const id = urlParams.get('id');
+      const listingId = id || slug;
+
+      const cartBtn = document.getElementById('btnAddToCart');
+      if (cartBtn && listingId) {
+        cartBtn.setAttribute('data-listing-id', listingId);
+        console.log('🛒 Cart button updated with listing ID:', listingId);
+      }
+    }
+
+    // Start checking for content immediately
+    setTimeout(checkForContent, 500);
+
+    // Make sure the page loads properly with header/footer
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    // Start initialization when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePage);
+    } else {
+      initializePage();
+    }
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for listing page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

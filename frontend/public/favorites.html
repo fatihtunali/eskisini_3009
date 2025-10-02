@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (TR uyumlu, latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext"
+    rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Favorilerim | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+  <link rel="stylesheet" href="/css/product-card.css?v=20250930">
+  <script src="/js/csp-bypass.js"></script>
+</head>
+
+<body>
+  <div data-include="partials/header.html"></div>
+
+  <main class="container section">
+    <h1>Favorilerim</h1>
+    <div id="favlist" class="products-list"></div>
+  </main>
+
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/config.js"></script>
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts via dependency manager
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('favorites');
+      }
+    });
+
+    // Initialize page when dependencies are loaded
+    function initializePage() {
+      console.log('🎯 Initializing favorites page');
+
+      // Initialize header manually
+      if (window.bootHeader) {
+        console.log('🔒 Booting header for favorites page');
+        window.bootHeader();
+      }
+
+      // Load partials
+      if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for favorites page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <script>
+  (function(){
+    const API = (window.APP && APP.API_BASE) || '';
+    const $   = (s,r=document)=>r.querySelector(s);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+
+    function redirectToLogin(){
+      const u = new URL('/login.html', location.origin);
+      u.searchParams.set('redirect', location.pathname + location.search);
+      location.href = u.toString();
+    }
+
+    const fmtPrice = (minor, cur='TRY') =>
+      `${((Number(minor)||0)/100).toLocaleString('tr-TR',{maximumFractionDigits:2})} ${esc(cur)}`;
+
+    function cardHTML(x){
+      // Convert to ProductCard component format
+      const product = {
+        id: x.listing_id,
+        slug: x.slug,
+        title: x.title,
+        price_minor: x.price_minor,
+        currency: x.currency || 'TRY',
+        cover_url: x.thumb_url || x.cover,
+        location_city: x.city || x.location_city || 'Türkiye',
+        view_count: x.view_count || 0,
+        created_at: x.created_at
+      };
+
+      // Use ProductCard component's renderListItem function
+      if (window.ProductCard && window.ProductCard.renderListItem) {
+        return window.ProductCard.renderListItem(product);
+      }
+
+      // Fallback to simple card if ProductCard component is not available
+      const href = product.slug
+        ? `/listing.html?slug=${encodeURIComponent(product.slug)}`
+        : `/listing.html?id=${encodeURIComponent(product.id)}`;
+      const img = product.cover_url || '/assets/placeholder.png';
+      const priceStr = product.price_minor ? fmtPrice(product.price_minor, product.currency) : '';
+
+      return `
+        <div class="horizontal-product-item">
+          <div class="product-image-container">
+            <div class="product-horizontal-image">
+              <img src="${img}" alt="${esc(product.title)}" onerror="this.src='/assets/placeholder.png';this.onerror=null">
+            </div>
+          </div>
+          <div class="product-content-area">
+            <div class="product-row-one">
+              <div class="product-title">${esc(product.title)}</div>
+              <div class="product-price">${priceStr}</div>
+            </div>
+            <div class="product-row-two">
+              <div class="product-left-info">
+                <span class="product-city">
+                  <i class="fas fa-map-marker-alt"></i>
+                  ${esc(product.location_city)}
+                </span>
+                <span class="product-views">
+                  <i class="fas fa-eye"></i>
+                  ${product.view_count}
+                </span>
+                <button class="favorite-btn active" onclick="toggleFavorite(${product.id}, this); event.preventDefault(); event.stopPropagation();" title="Favorilerden çıkar">
+                  <i class="fas fa-heart"></i>
+                </button>
+              </div>
+              <div class="product-right-info">
+                <a href="${href}" class="details-btn">
+                  <i class="fas fa-eye"></i> Detaylar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function load(){
+      console.log('🎯 Loading favorites...');
+      const root = $('#favlist');
+      root.innerHTML = '<div class="pad">Yükleniyor…</div>';
+
+      try{
+        console.log('🔗 Making API call to:', `${API}/api/favorites/my`);
+        const res = await fetch(`${API}/api/favorites/my`, {
+          credentials:'include',
+          headers:{'Accept':'application/json','Cache-Control':'no-store'},
+          cache:'no-store'
+        });
+
+        console.log('📡 API Response status:', res.status);
+
+        if (res.status === 401) {
+          console.log('🔒 User not authenticated, redirecting to login');
+          redirectToLogin();
+          return;
+        }
+
+        if (!res.ok) throw new Error('HTTP '+res.status);
+
+        const data = await res.json();
+        console.log('📦 Favorites data received:', data);
+
+        const items = data.items || [];
+        console.log('📊 Number of favorite items:', items.length);
+
+        if (!items.length) {
+          root.innerHTML = '<div class="empty">Henüz favoriniz yok.</div>';
+          return;
+        }
+
+        console.log('🎨 Rendering favorites...');
+        root.innerHTML = items.map(cardHTML).join('');
+        console.log('✅ Favorites rendered successfully');
+
+        // ProductCard component already handles favorites, no need for additional hydration
+
+      } catch (err) {
+        console.error('❌ Error loading favorites:', err);
+        $('#favlist').innerHTML = '<div class="pad error">Favoriler alınamadı: ' + err.message + '</div>';
+      }
+    }
+
+    // Load favorites when partials are ready
+    document.addEventListener('partials:loaded', function(){
+      console.log('🎯 Partials loaded, loading favorites');
+      load();
+    });
+
+    // Fallback: load after timeout
+    setTimeout(function(){
+      console.log('🔧 Fallback: Loading favorites after timeout');
+      load();
+    }, 3000);
+  })();
+  </script>
+</body>
+</html>

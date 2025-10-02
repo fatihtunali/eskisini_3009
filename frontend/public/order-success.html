@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (TR uyumlu, latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Sipariş Onayı - Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930" />
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    .success-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .success-header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .order-summary {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .next-steps {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      background: #10b981;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .btn-group-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #6b7280;
+    }
+
+    .error {
+      text-align: center;
+      padding: 3rem;
+      color: #dc2626;
+    }
+
+    @media (max-width: 768px) {
+      .btn-group-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <main class="success-container">
+    <!-- Loading State -->
+    <div id="successLoading" class="loading">
+      <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+      <p>Sipariş bilgileri yükleniyor...</p>
+    </div>
+
+    <!-- Success Content -->
+    <div id="successContent" style="display: none;">
+      <!-- Success Header -->
+      <div class="success-header">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Siparişiniz Alındı!</h1>
+        <p class="mb-0">Siparişiniz başarıyla oluşturuldu ve işleme alındı.</p>
+      </div>
+
+      <!-- Order Details -->
+      <div class="order-summary">
+        <h4 class="mb-3">
+          <i class="fas fa-receipt me-2"></i>
+          Sipariş Detayları
+        </h4>
+        <div id="orderDetails">
+          <!-- Order details will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Next Steps -->
+      <div class="next-steps">
+        <h5 class="mb-3">Bundan Sonra Ne Olacak?</h5>
+
+        <div class="step-item">
+          <div class="step-icon">1</div>
+          <div class="step-content">
+            <div class="step-title">Sipariş Onayı</div>
+            <div class="text-muted small">
+              Satıcı siparişinizi 24 saat içinde onaylayacak ve kargo sürecini başlatacak.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">2</div>
+          <div class="step-content">
+            <div class="step-title">Ödeme İşlemi</div>
+            <div class="text-muted small">
+              Ödeme yönteminize göre işlem tamamlanacak. Kredi kartı ödemeleri anında işlenir.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">3</div>
+          <div class="step-content">
+            <div class="step-title">Kargo ve Teslimat</div>
+            <div class="text-muted small">
+              Ürününüz kargoya verildiğinde takip numarası e-posta ile gönderilecek.
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-icon">4</div>
+          <div class="step-content">
+            <div class="step-title">Değerlendirme</div>
+            <div class="text-muted small">
+              Ürününüz elinize ulaştıktan sonra satıcıyı değerlendirmeyi unutmayın!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-group-actions">
+        <a href="/profile.html?tab=purchases" class="btn btn-primary">
+          <i class="fas fa-list me-2"></i>Siparişlerimi Görüntüle
+        </a>
+        <a href="/" class="btn btn-outline-primary">
+          <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
+        </a>
+        <a href="/search.html" class="btn btn-outline-secondary">
+          <i class="fas fa-search me-2"></i>Alışverişe Devam Et
+        </a>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="successError" style="display: none;" class="error">
+      <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+      <h3>Sipariş Bulunamadı</h3>
+      <p class="text-muted mb-4">Aradığınız sipariş bulunamadı veya size ait değil.</p>
+      <a href="/profile.html?tab=purchases" class="btn btn-primary">
+        <i class="fas fa-list me-2"></i>Siparişlerimi Görüntüle
+      </a>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('order-success');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for order-success page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

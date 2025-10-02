@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter + Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Fiyatlandırma | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+    }
+
+    /* Hero Section */
+    .pricing-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2.5rem 0 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+    }
+
+    .pricing-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .pricing-hero h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .pricing-hero p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      margin-bottom: 0;
+    }
+
+    /* Pricing Cards Container */
+    .pricing-container {
+      max-width: 100%;
+      margin: -1.5rem auto 1.5rem;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      align-items: stretch;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Pricing Card */
+    .pricing-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.25rem 1rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .pricing-card.featured {
+      border-color: #667eea;
+      background: linear-gradient(to bottom, rgba(102, 126, 234, 0.03), white);
+    }
+
+    .pricing-card.featured::before {
+      content: '⭐';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.35rem 0.75rem;
+      border-radius: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Card Header */
+    .pricing-card-header {
+      text-align: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .pricing-card-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .pricing-card.featured .pricing-card-icon {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .pricing-card h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 0.25rem;
+    }
+
+    .pricing-card-description {
+      font-size: 0.75rem;
+      color: #718096;
+      margin-bottom: 0;
+    }
+
+    /* Price */
+    .pricing-price {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .price-amount {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: #1a202c;
+      line-height: 1;
+    }
+
+    .price-currency {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #667eea;
+      margin-left: 0.15rem;
+    }
+
+    .price-period {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #718096;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .price-free {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    /* Features List */
+    .pricing-features {
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+
+    .pricing-features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #4a5568;
+      padding: 0.15rem 0;
+      line-height: 1.3;
+    }
+
+    .pricing-features li i {
+      color: #10b981;
+      font-size: 0.85rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+
+    .pricing-features li strong {
+      color: #1a202c;
+      font-weight: 600;
+    }
+
+    /* CTA Button */
+    .pricing-cta {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .pricing-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    }
+
+    .pricing-cta.secondary {
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      box-shadow: none;
+    }
+
+    .pricing-cta.secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Loading State */
+    .loading-container {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Error State */
+    .error-container {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #e53e3e;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      max-width: 900px;
+      margin: 2rem auto 3rem;
+      padding: 0 1rem;
+    }
+
+    .faq-section h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #1a202c;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 0.875rem;
+      padding: 1.25rem;
+      margin-bottom: 0.875rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .faq-item h3 {
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .faq-item p {
+      color: #718096;
+      margin: 0;
+      line-height: 1.5;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pricing-hero h1 {
+        font-size: 2rem;
+      }
+
+      .pricing-hero p {
+        font-size: 1rem;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .price-amount {
+        font-size: 2rem;
+      }
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+
+<body>
+  <div data-include="/partials/header.html"></div>
+
+  <!-- Hero Section -->
+  <section class="pricing-hero">
+    <div class="pricing-hero-content">
+      <h1>Basit ve Şeffaf Fiyatlandırma</h1>
+      <p>İhtiyacınıza uygun paketi seçin, işinizi büyütün</p>
+    </div>
+  </section>
+
+  <!-- Pricing Cards -->
+  <main class="pricing-container">
+    <div id="plans" class="pricing-grid" aria-live="polite">
+      <!-- Plans will be loaded here -->
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 1rem; color: #718096;">Planlar yükleniyor...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <h2>Sıkça Sorulan Sorular</h2>
+    <div class="faq-item">
+      <h3><i class="fas fa-question-circle me-2" style="color: #667eea;"></i>Paket değişikliği nasıl yapılır?</h3>
+      <p>Profilinizden istediğiniz zaman paket yükseltmesi yapabilirsiniz. Alt pakete geçmek için mevcut paket süreniz dolması gerekir.</p>
+    </div>
+    <div class="faq-item">
+      <h3><i class="fas fa-question-circle me-2" style="color: #667eea;"></i>Ödeme nasıl yapılır?</h3>
+      <p>Tüm kredi kartları ve banka kartları ile güvenli ödeme yapabilirsiniz. Aylık ve yıllık ödeme seçenekleri mevcuttur.</p>
+    </div>
+    <div class="faq-item">
+      <h3><i class="fas fa-question-circle me-2" style="color: #667eea;"></i>İptal politikası nedir?</h3>
+      <p>İstediğiniz zaman aboneliğinizi iptal edebilirsiniz. Ödediğiniz dönem sonuna kadar tüm özelliklerden yararlanmaya devam edersiniz.</p>
+    </div>
+    <div class="faq-item">
+      <h3><i class="fas fa-question-circle me-2" style="color: #667eea;"></i>Öne çıkarma kredileri nedir?</h3>
+      <p>Öne çıkarma kredileri ile ilanlarınızı ana sayfada ve kategori sayfalarında üst sıralarda gösterebilirsiniz. Her kredi 7 gün sürelidir.</p>
+    </div>
+  </section>
+
+  <div data-include="/partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('pricing');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for pricing page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <script>
+  function initializePricingPage() {
+  (async function () {
+    const API_BASE = (window.APP && window.APP.API_BASE) || '';
+    const $ = (s,r=document)=>r.querySelector(s);
+    const money = (m,c='TRY') => new Intl.NumberFormat('tr-TR',{style:'currency',currency:c}).format((Number(m)||0)/100);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+
+    async function getPlans(){
+      const r = await fetch(`${API_BASE}/api/billing/plans`, { headers:{'Accept':'application/json'}, credentials:'include' });
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    }
+
+    function handleChoose(code){
+      if (code === 'free') {
+        alert('Ücretsiz plan zaten aktiftir. Profilinize yönlendiriliyorsunuz.');
+        location.href = '/profile.html';
+      } else {
+        alert('Paket satın alma akışı yakında eklenecek. Daha fazla bilgi için iletişime geçebilirsiniz.');
+      }
+    }
+
+    const wrap = $('#plans');
+
+    try{
+      const data = await getPlans();
+      const plans = (data && data.plans) ? data.plans : [];
+
+      if (!plans.length){
+        wrap.innerHTML = `
+          <div class="error-container">
+            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+            <p>Planlar yüklenemedi. Lütfen daha sonra tekrar deneyin.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Icon mapping for each plan
+      const iconMap = {
+        'free': 'fa-gift',
+        'pro': 'fa-star',
+        'premium': 'fa-crown',
+        'business': 'fa-building',
+        'basic': 'fa-box'
+      };
+
+      // Description mapping for each plan
+      const descriptionMap = {
+        'free': 'Başlamak için ideal',
+        'pro': 'Profesyonel satıcılar için',
+        'premium': 'Güç kullanıcıları için',
+        'business': 'İşletmeler için',
+        'basic': 'Temel özellikler'
+      };
+
+      wrap.innerHTML = plans.map((p, index) => {
+        const perks = Array.isArray(p.perks) ? p.perks : (p.perks ? [p.perks] : []);
+        const period = p.period === 'monthly' ? 'ay' : (p.period === 'yearly' ? 'yıl' : p.period || '');
+        const isFeatured = index === 1 || p.code?.includes('pro');
+        const icon = iconMap[p.code] || 'fa-box';
+        const description = descriptionMap[p.code] || 'Sizin için özel';
+        const isFree = Number(p.price_minor) === 0;
+
+        return `
+          <article class="pricing-card ${isFeatured ? 'featured' : ''}">
+            <div class="pricing-card-header">
+              <div class="pricing-card-icon">
+                <i class="fas ${icon}"></i>
+              </div>
+              <h3>${esc(p.name || p.code || 'Plan')}</h3>
+              <p class="pricing-card-description">${description}</p>
+            </div>
+
+            <div class="pricing-price">
+              ${isFree ?
+                `<div class="price-free">Ücretsiz</div>` :
+                `<div>
+                   <span class="price-amount">${Math.floor(Number(p.price_minor)/100)}</span><span class="price-currency">₺</span>
+                   ${period ? `<span class="price-period">/${esc(period)}</span>` : ''}
+                 </div>`
+              }
+            </div>
+
+            <div class="pricing-features">
+              <ul>
+                <li>
+                  <i class="fas fa-check-circle"></i>
+                  <span><strong>${p.listing_quota_month===9999?'Sınırsız':esc(p.listing_quota_month)}</strong> aylık ilan hakkı</span>
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i>
+                  <span><strong>${esc(p.bump_credits_month)}</strong> yükseltme kredisi</span>
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i>
+                  <span><strong>${esc(p.featured_credits_month)}</strong> öne çıkarma kredisi</span>
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i>
+                  <span>${esc(p.support_level === 'priority' ? 'Öncelikli' : p.support_level === 'standard' ? 'Standart' : 'Temel')} destek</span>
+                </li>
+                ${perks.map(x=>`
+                  <li>
+                    <i class="fas fa-check-circle"></i>
+                    <span>${esc(x)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <button class="pricing-cta ${isFree ? 'secondary' : ''}" data-plan="${esc(p.code)}">
+              ${isFree ? 'Ücretsiz Başla' : 'Paketi Seç'}
+            </button>
+          </article>
+        `;
+      }).join('');
+
+      wrap.addEventListener('click', (e)=>{
+        const btn = e.target.closest('button[data-plan]');
+        if (!btn) return;
+        handleChoose(btn.dataset.plan);
+      });
+    }catch(err){
+      console.error(err);
+      wrap.innerHTML = `
+        <div class="error-container">
+          <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+          <p>Planlar yüklenirken bir hata oluştu.</p>
+        </div>
+      `;
+    }
+  })();
+  }
+
+  // Initialize pricing page when dependencies are loaded
+  document.addEventListener('dependenciesLoaded', initializePricingPage);
+
+  // Fallback initialization
+  setTimeout(() => {
+    if (!window.dependenciesLoadedTriggered) {
+      initializePricingPage();
+    }
+  }, 2000);
+  </script>
+</body>
+</html>

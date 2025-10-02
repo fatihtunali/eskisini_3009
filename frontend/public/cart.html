@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Sepetim - Eskisini Ver Yenisini Al</title>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930" />
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    .cart-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .cart-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .cart-content {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+    }
+
+    .cart-items {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .cart-summary {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      height: fit-content;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-price {
+      color: #059669;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .qty-btn:hover:not(:disabled) {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .qty-input {
+      width: 60px;
+      text-align: center;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: 6px;
+    }
+
+    .remove-btn {
+      color: #ef4444;
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .remove-btn:hover:not(:disabled) {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .remove-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .summary-row.total {
+      border-bottom: none;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #059669;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 2px solid #e5e7eb;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-checkout:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      transform: translateY(-1px);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6b7280;
+      background: white;
+      border-radius: 1rem;
+    }
+
+    .empty-cart i {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: #d1d5db;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: #6b7280;
+    }
+
+    @media (max-width: 968px) {
+      .cart-content {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-summary {
+        position: static;
+      }
+
+      .cart-item {
+        flex-direction: column;
+      }
+
+      .item-image {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+
+  <main class="cart-container">
+    <div class="cart-header">
+      <h1><i class="fas fa-shopping-cart me-2"></i>Sepetim</h1>
+      <p>Seçtiğiniz ürünleri inceleyin ve siparişinizi tamamlayın</p>
+    </div>
+
+    <div id="cartLoading" class="loading">
+      <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+      <p>Sepetiniz yükleniyor...</p>
+    </div>
+
+    <div id="cartContent" style="display: none;">
+      <div class="cart-content">
+        <div class="cart-items">
+          <h3><i class="fas fa-list me-2"></i>Sepetinizdeki Ürünler</h3>
+          <div id="cartItemsList"></div>
+        </div>
+
+        <div class="cart-summary">
+          <h4><i class="fas fa-calculator me-2"></i>Sipariş Özeti</h4>
+          <div id="cartSummary"></div>
+          <button class="btn-checkout" id="checkoutBtn">
+            <i class="fas fa-credit-card me-2"></i>Siparişi Tamamla
+          </button>
+          <button class="btn btn-outline-secondary w-100 mt-2" id="clearCartBtn">
+            <i class="fas fa-trash me-2"></i>Sepeti Temizle
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="emptyCart" class="empty-cart" style="display: none;">
+      <i class="fas fa-shopping-cart"></i>
+      <h3>Sepetiniz Boş</h3>
+      <p>Henüz sepetinize ürün eklememişsiniz. Alışverişe başlamak için ürünleri inceleyin.</p>
+      <a href="/" class="btn btn-primary mt-3">
+        <i class="fas fa-search me-2"></i>Ürünleri İncele
+      </a>
+    </div>
+  </main>
+
+  <div data-include="partials/footer.html"></div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    let currentCart = null;
+
+    // Initialize when dependencies loaded
+    document.addEventListener('dependenciesLoaded', async () => {
+      console.log('🛒 Cart page initialized');
+      await loadAndDisplayCart();
+
+      // Setup event listeners
+      document.getElementById('checkoutBtn')?.addEventListener('click', goToCheckout);
+      document.getElementById('clearCartBtn')?.addEventListener('click', clearCart);
+    });
+
+    async function loadAndDisplayCart() {
+      try {
+        if (!window.Cart) {
+          console.error('Cart.js not loaded');
+          showEmpty();
+          return;
+        }
+
+        await window.Cart.load();
+        currentCart = window.Cart.getState();
+        renderCart();
+      } catch (error) {
+        console.error('Failed to load cart:', error);
+        showEmpty();
+      }
+    }
+
+    function renderCart() {
+      const loading = document.getElementById('cartLoading');
+      const content = document.getElementById('cartContent');
+      const empty = document.getElementById('emptyCart');
+      const itemsList = document.getElementById('cartItemsList');
+      const summary = document.getElementById('cartSummary');
+
+      loading.style.display = 'none';
+
+      if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
+        showEmpty();
+        return;
+      }
+
+      content.style.display = 'block';
+      empty.style.display = 'none';
+
+      // Render items
+      itemsList.innerHTML = currentCart.items.map(item => {
+        const itemId = item.id || item.listing_id;
+        const price = item.price_minor || item.unit_price_minor || 0;
+        const imageUrl = item.cover_url || item.image_url || '/assets/placeholder.png';
+
+        return `
+          <div class="cart-item" data-item-id="${itemId}">
+            <img src="${imageUrl}"
+                 alt="${escapeHtml(item.title || 'Product')}"
+                 class="item-image"
+                 onerror="this.src='/assets/placeholder.png'">
+            <div class="item-details">
+              <div class="item-title">${escapeHtml(item.title || 'Ürün')}</div>
+              <div class="item-price">${formatPrice(price, item.currency)}</div>
+              <div class="quantity-controls">
+                <button class="qty-btn" onclick="changeQty(${itemId}, -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <input type="number" class="qty-input" value="${item.quantity || 1}" readonly>
+                <button class="qty-btn" onclick="changeQty(${itemId}, 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${itemId})" title="Sepetten çıkar">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Calculate totals
+      const subtotal = currentCart.items.reduce((sum, item) => {
+        const price = item.price_minor || item.unit_price_minor || 0;
+        return sum + (price * (item.quantity || 1));
+      }, 0);
+
+      const shipping = 500; // 5 TL
+      const total = subtotal + shipping;
+
+      summary.innerHTML = `
+        <div class="summary-row">
+          <span>Ara Toplam</span>
+          <span>${formatPrice(subtotal)}</span>
+        </div>
+        <div class="summary-row">
+          <span>Kargo</span>
+          <span>${formatPrice(shipping)}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Toplam</span>
+          <span>${formatPrice(total)}</span>
+        </div>
+      `;
+    }
+
+    function showEmpty() {
+      document.getElementById('cartLoading').style.display = 'none';
+      document.getElementById('cartContent').style.display = 'none';
+      document.getElementById('emptyCart').style.display = 'block';
+    }
+
+    async function changeQty(itemId, delta) {
+      if (!window.Cart) return;
+
+      const item = currentCart.items.find(i => (i.id || i.listing_id) === itemId);
+      if (!item) return;
+
+      const newQty = (item.quantity || 1) + delta;
+      if (newQty < 1) {
+        await removeItem(itemId);
+        return;
+      }
+
+      // Disable buttons during update
+      disableButtons(true);
+
+      try {
+        await window.Cart.update(itemId, newQty);
+        await loadAndDisplayCart();
+      } catch (error) {
+        console.error('Failed to update quantity:', error);
+        alert('Miktar güncellenemedi');
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    async function removeItem(itemId) {
+      if (!confirm('Bu ürünü sepetten çıkarmak istediğinize emin misiniz?')) return;
+
+      disableButtons(true);
+
+      try {
+        await window.Cart.remove(itemId);
+        await loadAndDisplayCart();
+      } catch (error) {
+        console.error('Failed to remove item:', error);
+        alert('Ürün çıkarılamadı');
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    async function clearCart() {
+      if (!confirm('Tüm sepeti temizlemek istediğinize emin misiniz?')) return;
+
+      disableButtons(true);
+
+      try {
+        await window.Cart.clear();
+        await loadAndDisplayCart();
+      } catch (error) {
+        console.error('Failed to clear cart:', error);
+        alert('Sepet temizlenemedi');
+      } finally {
+        disableButtons(false);
+      }
+    }
+
+    function goToCheckout() {
+      if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
+        alert('Sepetiniz boş');
+        return;
+      }
+      window.location.href = '/checkout.html';
+    }
+
+    function disableButtons(disabled) {
+      document.querySelectorAll('.qty-btn, .remove-btn, .btn-checkout, #clearCartBtn').forEach(btn => {
+        btn.disabled = disabled;
+      });
+    }
+
+    function formatPrice(priceMinor, currency = 'TRY') {
+      if (!priceMinor && priceMinor !== 0) return 'Fiyat belirtilmemiş';
+      const price = (priceMinor / 100).toFixed(2);
+      const symbol = currency === 'TRY' ? '₺' : '$';
+      return `${price} ${symbol}`;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

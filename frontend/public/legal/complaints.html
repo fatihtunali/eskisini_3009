@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Şikayet yönetimi ve destek sistemi. Sorunlarınızı bildirin, çözüm sürecini takip edin.">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Şikayet Yönetimi | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+  <link rel="stylesheet" href="/css/legal.css?v=20250930">
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div data-include="../partials/header.html"></div>
+
+  <!-- COMPLAINTS HERO SECTION -->
+  <section class="modern-hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="display-4 fw-bold mb-3">
+          <i class="fas fa-headset me-3"></i>Destek ve Şikayetler
+        </h1>
+        <p class="lead opacity-90 mb-4">
+          Sorunlarınızı bildirin, çözüm sürecini takip edin
+        </p>
+        <button class="btn btn-light btn-lg" onclick="showNewComplaintModal()">
+          <i class="fas fa-plus me-2"></i>Yeni Şikayet
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="container my-5">
+
+    <!-- Test Mesajı -->
+    <div class="alert alert-info mb-4" role="alert">
+      <i class="fas fa-info-circle me-2"></i>
+      <strong>Test Sayfası:</strong> Şikayet yönetim sistemi başarıyla yüklendi!
+      Bu sistem giriş yaptıktan sonra tam olarak çalışacaktır.
+    </div>
+
+    <!-- İstatistikler -->
+    <div class="row mb-5">
+      <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-clipboard-list fa-2x text-primary mb-3"></i>
+            <div class="h3 mb-0" id="totalComplaints">0</div>
+            <small class="text-muted">Toplam Şikayet</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-clock fa-2x text-warning mb-3"></i>
+            <div class="h3 mb-0" id="openComplaints">0</div>
+            <small class="text-muted">Açık Şikayetler</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+            <div class="h3 mb-0" id="resolvedComplaints">0</div>
+            <small class="text-muted">Çözülen</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-star fa-2x text-info mb-3"></i>
+            <div class="h3 mb-0" id="avgSatisfaction">-</div>
+            <small class="text-muted">Ortalama Memnuniyet</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtreler -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-3 mb-2">
+                <select class="form-select" id="statusFilter">
+                  <option value="">Tüm Durumlar</option>
+                  <option value="open">Açık</option>
+                  <option value="in_progress">İşlemde</option>
+                  <option value="resolved">Çözüldü</option>
+                  <option value="closed_by_user">Kullanıcı Kapattı</option>
+                </select>
+              </div>
+              <div class="col-md-3 mb-2">
+                <select class="form-select" id="categoryFilter">
+                  <option value="">Tüm Kategoriler</option>
+                  <option value="product_quality">Ürün Kalitesi</option>
+                  <option value="shipping">Kargo/Teslimat</option>
+                  <option value="payment">Ödeme</option>
+                  <option value="other">Diğer</option>
+                </select>
+              </div>
+              <div class="col-md-4 mb-2">
+                <input type="search" class="form-control" id="searchInput" placeholder="Şikayet ara...">
+              </div>
+              <div class="col-md-2 mb-2">
+                <button class="btn btn-outline-primary w-100" onclick="loadComplaints()">
+                  <i class="fas fa-sync me-1"></i>Yenile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Şikayet Listesi -->
+    <div class="row">
+      <div class="col-12">
+        <div id="complaintsContainer">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+              <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">Giriş yaparak şikayetlerinizi görüntüleyebilirsiniz</h5>
+              <div class="mt-3">
+                <a href="../login.html" class="btn btn-primary me-2">Giriş Yap</a>
+                <a href="../register.html" class="btn btn-outline-primary">Hesap Oluştur</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Yeni Şikayet Modal -->
+  <div class="modal fade" id="newComplaintModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-plus-circle me-2"></i>Yeni Şikayet Oluştur
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="complaintForm" onsubmit="submitComplaint(event)">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="complaintCategory" class="form-label">Kategori *</label>
+                <select class="form-select" id="complaintCategory" required>
+                  <option value="">Kategori seçin</option>
+                  <option value="product_quality">Ürün Kalitesi</option>
+                  <option value="shipping">Kargo/Teslimat</option>
+                  <option value="payment">Ödeme</option>
+                  <option value="seller_behavior">Satıcı Davranışı</option>
+                  <option value="platform_technical">Platform Teknik</option>
+                  <option value="other">Diğer</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="urgencyLevel" class="form-label">Aciliyet Seviyesi</label>
+                <select class="form-select" id="urgencyLevel">
+                  <option value="low">Düşük</option>
+                  <option value="medium" selected>Orta</option>
+                  <option value="high">Yüksek</option>
+                  <option value="critical">Kritik</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="complaintSubject" class="form-label">Konu *</label>
+              <input type="text" class="form-control" id="complaintSubject" maxlength="255" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="complaintDescription" class="form-label">Açıklama *</label>
+              <textarea class="form-control" id="complaintDescription" rows="5" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane me-2"></i>Şikayet Gönder
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div data-include="../partials/footer.html"></div>
+
+  <!-- Bootstrap JS -->
+  <!-- Bootstrap JS loaded in header.html -->
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Modal functions
+    function showNewComplaintModal() {
+      const modal = new bootstrap.Modal(document.getElementById('newComplaintModal'));
+      modal.show();
+    }
+
+    function submitComplaint(event) {
+      event.preventDefault();
+      alert('Şikayet sistemi çalışıyor! Giriş yaptıktan sonra tam işlevsellik aktif olacak.');
+    }
+
+    function loadComplaints() {
+      alert('Şikayetler yenileniyor... (Giriş yaptıktan sonra çalışır)');
+    }
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for complaints page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <style>
+    /* Hero Section */
+    .modern-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modern-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+
+</body>
+</html>

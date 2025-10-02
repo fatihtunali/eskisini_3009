@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Mağazanızı açın ve premium satıcı olun! Logo, banner, gelişmiş istatistikler ve daha fazlası.">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Mağaza Aç - Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    /* Hero Section */
+    .shop-hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 5rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shop-hero.active {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 5rem 0;
+      background: #f8fafc;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1a202c;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #718096;
+      margin-bottom: 4rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .feature-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1a202c;
+    }
+
+    .feature-desc {
+      color: #718096;
+      line-height: 1.6;
+    }
+
+    /* Setup Form Section */
+    .setup-section {
+      padding: 5rem 0;
+      background: white;
+    }
+
+    .setup-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 1rem;
+      padding: 3rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .form-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #1a202c;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .form-control {
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.875rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #667eea;
+      color: #667eea;
+      border-radius: 0.5rem;
+      padding: 0.875rem 2rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* Active Shop Styles */
+    .shop-active {
+      background: #f8fafc;
+    }
+
+    .shop-active .setup-form {
+      max-width: 800px;
+    }
+
+    .shop-active .feature-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      font-size: 2.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .setup-form {
+        margin: 0 1rem;
+        padding: 2rem;
+      }
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <!-- HERO SECTION -->
+  <section class="shop-hero" id="shopHero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title" id="heroTitle">
+          <i class="fas fa-store me-3"></i>
+          Mağazanızı Açın
+        </h1>
+        <p class="hero-subtitle" id="heroSubtitle">
+          Premium satıcı olun ve işinizi büyütün!<br>
+          Logo, banner, gelişmiş istatistikler ve daha fazlası.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="features-section" id="featuresSection">
+    <div class="container">
+      <h2 class="section-title">Mağaza Açmanın Avantajları</h2>
+      <p class="section-subtitle">Premium özelliklerin keyfini çıkarın ve satışlarınızı artırın</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-crown"></i>
+          </div>
+          <h3 class="feature-title">Premium Rozet</h3>
+          <p class="feature-desc">Mağazanızın güvenilir olduğunu gösteren altın rozet ile öne çıkın ve müşteri güvenini kazanın.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3 class="feature-title">Logo & Banner</h3>
+          <p class="feature-desc">Markanızı yansıtan özel logo ve banner yükleyerek profesyonel görünüm elde edin.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3 class="feature-title">Gelişmiş İstatistikler</h3>
+          <p class="feature-desc">Detaylı satış analizi, ziyaretçi istatistikleri ve performans raporları ile işinizi büyütün.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h3 class="feature-title">Öne Çıkarma</h3>
+          <p class="feature-desc">İlanlarınız arama sonuçlarında ve ana sayfada öne çıksın, daha fazla görüntülenme elde edin.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="feature-title">Öncelikli Destek</h3>
+          <p class="feature-desc">7/24 öncelikli müşteri desteği ile sorunlarınız anında çözülsün.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-infinity"></i>
+          </div>
+          <h3 class="feature-title">Sınırsız İlan</h3>
+          <p class="feature-desc">İstediğiniz kadar ilan verin, ürün portföyünüzü genişletin.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETUP FORM SECTION -->
+  <section class="setup-section" id="setupSection">
+    <div class="container">
+      <form class="setup-form" id="shopSetupForm">
+        <h2 class="form-title">Mağazanızı Kurun</h2>
+
+        <div class="form-group">
+          <label class="form-label" for="shopName">Mağaza Adı *</label>
+          <input type="text" class="form-control" id="shopName" placeholder="Örn: TechStore İstanbul" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="shopDescription">Mağaza Açıklaması</label>
+          <textarea class="form-control" id="shopDescription" rows="3" placeholder="Mağazanızı kısaca tanıtın..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="shopCity">Şehir *</label>
+          <select class="form-control" id="shopCity" required>
+            <option value="">Şehir Seçin</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="shopPhone">Telefon</label>
+          <input type="tel" class="form-control" id="shopPhone" placeholder="+90 555 123 45 67">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="shopWebsite">Website</label>
+          <input type="url" class="form-control" id="shopWebsite" placeholder="https://www.siteniz.com">
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-rocket me-2"></i>Mağazamı Aç
+        </button>
+
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='/sell.html'">
+          <i class="fas fa-arrow-left me-2"></i>İlerisi için, şimdi ilan ver
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('shop-setup');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for shop-setup page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <script>
+    class ShopSetup {
+      constructor() {
+        this.init();
+      }
+
+      async init() {
+        console.log('ShopSetup init called');
+        await this.loadPartials();
+
+        setTimeout(async () => {
+          console.log('Starting shop check after timeout');
+          await this.checkExistingShop();
+        }, 2000);
+
+        this.loadCities();
+        this.setupForm();
+      }
+
+      async loadPartials() {
+        if (typeof includePartials === 'function') {
+          await includePartials();
+
+          setTimeout(() => {
+            if (typeof window.setupHeaderSearch === 'function') {
+              window.setupHeaderSearch();
+            }
+          }, 100);
+        }
+      }
+
+      loadCities() {
+        const select = document.getElementById('shopCity');
+        if (!select) return;
+
+        const cities = window.CITIES_TR || [
+          'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana',
+          'Konya', 'Gaziantep', 'Mersin', 'Diyarbakır', 'Kayseri', 'Eskişehir'
+        ];
+
+        cities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          select.appendChild(option);
+        });
+      }
+
+      async checkExistingShop() {
+        try {
+          // Cookie'den de token almayı dene
+          let token = localStorage.getItem('token');
+          if (!token) {
+            // Cookie'den token oku
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+          console.log('Checking existing shop with token:', token ? 'exists' : 'missing');
+
+          const currentUser = await this.getCurrentUser(token);
+          console.log('Current user:', currentUser);
+
+          // Mock data kaldırıldı - sadece API'den veri alacağız
+
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/debug/my-profile-test`, {
+            headers,
+            credentials: 'include' // Cookie gönder
+          });
+
+          console.log('API response status:', response.status);
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('API response data:', data);
+
+            if (data.hasShop) {
+              console.log('Shop found, showing existing shop content');
+              this.showExistingShopContent(data.seller);
+              return;
+            } else {
+              console.log('No shop found, showing setup form');
+            }
+          } else {
+            const errorData = await response.json();
+            console.log('API error:', errorData);
+          }
+        } catch (error) {
+          console.error('Error checking existing shop:', error);
+        }
+      }
+
+      async getCurrentUser(token) {
+        try {
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/auth/me`, {
+            headers,
+            credentials: 'include' // Cookie gönder
+          });
+          if (response.ok) {
+            const data = await response.json();
+            return data.user;
+          }
+        } catch (error) {
+          console.error('Error getting current user:', error);
+        }
+        return null;
+      }
+
+      showExistingShopContent(seller) {
+        console.log('showExistingShopContent called with seller:', seller);
+
+        // Hero section'ı güncelle
+        const hero = document.getElementById('shopHero');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroSubtitle = document.getElementById('heroSubtitle');
+        const featuresSection = document.getElementById('featuresSection');
+        const setupSection = document.getElementById('setupSection');
+
+        hero.classList.add('active');
+        heroTitle.innerHTML = '<i class="fas fa-store me-3" style="color: #10b981;"></i>Mağazanız Aktif!';
+        heroSubtitle.innerHTML = 'Tebrikler! Premium mağazanız başarıyla açılmış ve aktif durumda.';
+
+        // Features section'ı gizle
+        featuresSection.style.display = 'none';
+
+        // Setup section'ı shop active content ile değiştir
+        setupSection.classList.add('shop-active');
+        setupSection.innerHTML = `
+          <div class="container">
+            <div class="setup-form">
+              <div class="text-center mb-4">
+                <div class="feature-icon" style="margin: 0 auto 1.5rem;">
+                  <i class="fas fa-check"></i>
+                </div>
+                <h3 style="color: #1a202c; margin-bottom: 1rem; font-size: 2rem;">${seller.display_name}</h3>
+                <p style="color: #718096; margin-bottom: 2rem; font-size: 1.1rem;">
+                  <i class="fas fa-map-marker-alt me-2"></i>${seller.city} •
+                  <i class="fas fa-chart-line me-1 ms-3"></i>${seller.total_sales || 0} satış •
+                  <i class="fas fa-star me-1 ms-3" style="color: #fbbf24;"></i>${seller.rating_avg || 'Yeni'}
+                  ${seller.rating_count ? '(' + seller.rating_count + ' değerlendirme)' : ''}
+                </p>
+              </div>
+
+              <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; border: 2px solid #10b981;">
+                <h4 style="color: #059669; margin-bottom: 1.5rem; text-align: center;">
+                  <i class="fas fa-crown me-2"></i>Premium Mağaza Özellikleriniz
+                </h4>
+                <div class="row">
+                  <div class="col-md-6">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>${seller.max_listings || 300} ilan hakkı</li>
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>Öne çıkarma özellikleri</li>
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>Gelişmiş istatistikler</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>Premium rozet</li>
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>Öncelikli destek</li>
+                      <li style="padding: 0.75rem 0; color: #059669; font-weight: 500;"><i class="fas fa-check-circle me-3"></i>Ana sayfa görünürlüğü</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-grid gap-3">
+                <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/seller-profile.html?id=${seller.user_id}'" style="padding: 1rem;">
+                  <i class="fas fa-store me-2"></i>Mağazamı Görüntüle
+                </button>
+
+                <button type="button" class="btn btn-success btn-lg" onclick="window.location.href='/sell.html'" style="padding: 1rem; background: #28a745; border-color: #28a745; color: white;">
+                  <i class="fas fa-plus me-2"></i>Yeni İlan Ver
+                </button>
+
+                <div class="row mt-2">
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-primary w-100" onclick="window.location.href='/shop-settings.html'">
+                      <i class="fas fa-cog me-2"></i>Mağaza Ayarları
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="window.location.href='/messages.html'">
+                      <i class="fas fa-comments me-2"></i>Mesajlarım
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      setupForm() {
+        const form = document.getElementById('shopSetupForm');
+        if (!form) return;
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          await this.handleShopSetup();
+        });
+      }
+
+      async handleShopSetup() {
+        const submitBtn = document.querySelector('#shopSetupForm button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Mağaza Açılıyor...';
+
+          const formData = {
+            display_name: document.getElementById('shopName').value,
+            description: document.getElementById('shopDescription').value,
+            city: document.getElementById('shopCity').value,
+            phone: document.getElementById('shopPhone').value,
+            website: document.getElementById('shopWebsite').value,
+            seller_type: 'shop'
+          };
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/sellers/seller-profile`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (response.ok) {
+            alert('Tebrikler! Mağazanız başarıyla açıldı.');
+            window.location.href = '/profile.html';
+          } else {
+            const error = await response.json();
+            alert(`Hata: ${error.message || 'Mağaza açılamadı'}`);
+          }
+
+        } catch (error) {
+          console.error('Shop setup error:', error);
+          alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+    }
+
+    // Initialize when dependencies are loaded
+    function initializeShopSetup() {
+      new ShopSetup();
+    }
+
+    document.addEventListener('dependenciesLoaded', initializeShopSetup);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        initializeShopSetup();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

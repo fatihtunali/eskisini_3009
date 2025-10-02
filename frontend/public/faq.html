@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (TR uyumlu, latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Sık Sorulan Sorular | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930" />
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <main class="container section">
+    <div class="faq-page">
+      <h1 class="page-title">Sık Sorulan Sorular</h1>
+      <p class="page-subtitle">En çok merak edilen sorulara hızlı cevaplar bulabilirsiniz.</p>
+
+      <!-- FAQ Arama -->
+      <div class="faq-search">
+        <input type="text" id="faqSearch" placeholder="Sorunuzu aramak için yazın...">
+        <button onclick="searchFAQ()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <!-- FAQ Kategorileri -->
+      <div class="faq-categories">
+        <button class="category-btn active" onclick="filterFAQ('all')">Tümü</button>
+        <button class="category-btn" onclick="filterFAQ('account')">Hesap</button>
+        <button class="category-btn" onclick="filterFAQ('selling')">Satış</button>
+        <button class="category-btn" onclick="filterFAQ('buying')">Alış</button>
+        <button class="category-btn" onclick="filterFAQ('trading')">Takas</button>
+        <button class="category-btn" onclick="filterFAQ('payment')">Ödeme</button>
+        <button class="category-btn" onclick="filterFAQ('safety')">Güvenlik</button>
+      </div>
+
+      <!-- FAQ Listesi -->
+      <div class="faq-list" id="faqList">
+        <div class="faq-item" data-category="account">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Nasıl hesap oluştururum?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Hesap oluşturmak için sağ üstteki "Kayıt Ol" butonuna tıklayın. E-posta adresinizi, tam adınızı ve güvenli bir şifre girin. Kullanım şartlarını kabul ettikten sonra "Hesabımı Oluştur" butonuna tıklayın.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="account">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Şifremi unuttum, ne yapmalıyım?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Giriş sayfasında "Şifremi Unuttum" linkine tıklayın. E-posta adresinizi girin ve size gönderilen linki takip ederek yeni şifre oluşturun.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="selling">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>İlan vermek ücretli mi?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Temel ilan verme tamamen ücretsizdir. Aylık 5 adet ücretsiz ilan hakkınız bulunmaktadır. Daha fazla ilan vermek veya öne çıkan ilan özelliklerini kullanmak için Premium paketlerimizi inceleyebilirsiniz.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="selling">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>İlanımı nasıl düzenlerim veya silerim?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Profil sayfanızdaki "İlanlarım" sekmesinden tüm ilanlarınızı görebilir, düzenleyebilir veya silebilirsiniz. İlan üzerindeki "Düzenle" veya "Sil" butonlarını kullanın.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="buying">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Ürünü nasıl satın alabilirim?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Beğendiğiniz ürünün sayfasında "Satın Al" butonuna tıklayın. Ödeme bilgilerinizi girin ve işlemi tamamlayın. Satıcı ile iletişime geçerek teslimat detaylarını görüşün.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="buying">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Satın aldığım ürünü iade edebilir miyim?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>İade politikası satıcıya göre değişiklik gösterebilir. Satın almadan önce ürün açıklamasında belirtilen iade koşullarını kontrol edin. Sorun yaşadığınızda önce satıcı ile iletişime geçin.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="trading">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Takas nasıl çalışır?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Takas yapmak istediğiniz üründe "Takas Teklif Et" butonuna tıklayın. Karşılığında vereceğiniz ürünü belirtin ve gerekirse ek nakit teklifi yapın. Satıcı teklifinizi değerlendirip kabul veya ret edecektir.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="trading">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Takas güvenli mi?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Takaslarınızı güvenli hale getirmek için buluşma yerini güvenli bir yer seçin, ürünleri karşılıklı kontrol edin ve platform üzerinden iletişim kurun. Şüpheli durumları mutlaka bize bildirin.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="payment">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Hangi ödeme yöntemlerini kabul ediyorsunuz?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Kredi kartı, banka kartı, havale/EFT ve kapıda ödeme seçeneklerini destekliyoruz. Güvenli ödeme için SSL şifreleme kullanıyoruz ve ödeme bilgilerinizi saklamıyoruz.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="payment">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Ödeme güvenli mi?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Evet, tüm ödemeler 256-bit SSL şifreleme ile korunmaktadır. Ödeme bilgileriniz güvenli ödeme sağlayıcıları aracılığıyla işlenir ve bizde saklanmaz.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="safety">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Dolandırıcılıktan nasıl korunurum?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Sadece doğrulanmış satıcılarla alışveriş yapın, buluşmaları güvenli yerlerde gerçekleştirin, platform dışı ödeme yapmayın ve şüpheli durumları hemen bize bildirin. Çok düşük fiyatlı ilanlardan kaçının.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="safety">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Kişisel bilgilerim güvende mi?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>KVKK uyumlu gizlilik politikamız gereği kişisel bilgileriniz güvende tutulur. Bilgileriniz üçüncü taraflarla paylaşılmaz ve sadece platformun çalışması için gerekli durumlarda kullanılır.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="account">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>Hesabımı nasıl silebilirim?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Hesabınızı silmek için profil ayarlarından "Hesabı Sil" seçeneğini kullanabilir veya KVKK haklarınızı kullanarak bizimle iletişime geçebilirsiniz.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-category="selling">
+          <div class="faq-question" onclick="toggleFAQ(this)">
+            <h3>İlanımda kaç fotoğraf kullanabilirim?</h3>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Ücretsiz hesaplarla her ilan için maksimum 5 fotoğraf yükleyebilirsiniz. Premium üyelikle bu sayı 15'e çıkmaktadır.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yardım -->
+      <div class="faq-help">
+        <div class="help-card">
+          <h3>Aradığınız soruyu bulamadınız mı?</h3>
+          <p>Daha detaylı yardım için destek sayfamızı ziyaret edebilir veya bizimle iletişime geçebilirsiniz.</p>
+          <div class="help-actions">
+            <a href="/help.html" class="btn btn-primary">Yardım Merkezi</a>
+            <a href="/contact.html" class="btn btn-outline">İletişim</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('faq');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for faq page');
+        initializePage();
+      }
+    }, 2000);
+
+    // FAQ functionality
+    function initializeFAQPage() {
+
+    function toggleFAQ(element) {
+      const faqItem = element.parentElement;
+      const answer = faqItem.querySelector('.faq-answer');
+      const icon = element.querySelector('.faq-icon');
+
+      faqItem.classList.toggle('active');
+
+      if (faqItem.classList.contains('active')) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        icon.textContent = '−';
+      } else {
+        answer.style.maxHeight = '0';
+        icon.textContent = '+';
+      }
+    }
+
+    function filterFAQ(category) {
+      const items = document.querySelectorAll('.faq-item');
+      const buttons = document.querySelectorAll('.category-btn');
+
+      // Update active button
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Filter items
+      items.forEach(item => {
+        if (category === 'all' || item.dataset.category === category) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function searchFAQ() {
+      const query = document.getElementById('faqSearch').value.toLowerCase();
+      const items = document.querySelectorAll('.faq-item');
+
+      if (!query) {
+        items.forEach(item => item.style.display = 'block');
+        return;
+      }
+
+      items.forEach(item => {
+        const question = item.querySelector('.faq-question h3').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer p').textContent.toLowerCase();
+
+        if (question.includes(query) || answer.includes(query)) {
+          item.style.display = 'block';
+          // Highlight matching items
+          item.classList.add('highlight');
+        } else {
+          item.style.display = 'none';
+          item.classList.remove('highlight');
+        }
+      });
+    }
+
+    // Enter tuşuyla arama
+    document.getElementById('faqSearch').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchFAQ();
+      }
+    });
+
+    // Arama kutusunu temizledikçe filtreleme
+    document.getElementById('faqSearch').addEventListener('input', function(e) {
+      if (e.target.value === '') {
+        document.querySelectorAll('.faq-item').forEach(item => {
+          item.style.display = 'block';
+          item.classList.remove('highlight');
+        });
+      }
+    });
+    }
+
+    // Initialize FAQ functionality when dependencies are loaded
+    document.addEventListener('dependenciesLoaded', initializeFAQPage);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        initializeFAQPage();
+      }
+    }, 2000);
+  </script>
+
+  <style>
+    .faq-page {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #1a202c;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: #718096;
+      margin-bottom: 2rem;
+    }
+
+    .faq-search {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto 2rem auto;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .faq-search input {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-right: none;
+      font-size: 1rem;
+    }
+
+    .faq-search button {
+      padding: 1rem 1.5rem;
+      background: #667eea;
+      color: white;
+      border: 1px solid #667eea;
+      cursor: pointer;
+    }
+
+    .faq-categories {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .category-btn {
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .category-btn:hover,
+    .category-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .faq-list {
+      margin-bottom: 3rem;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .faq-item.highlight {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .faq-question:hover {
+      background: #f7fafc;
+    }
+
+    .faq-question h3 {
+      margin: 0;
+      color: #2d3748;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .faq-icon {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #667eea;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #f7fafc;
+    }
+
+    .faq-answer p {
+      padding: 1.5rem;
+      margin: 0;
+      color: #4a5568;
+      line-height: 1.6;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-help {
+      text-align: center;
+    }
+
+    .help-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .help-card h3 {
+      margin-bottom: 1rem;
+      color: #2d3748;
+    }
+
+    .help-card p {
+      margin-bottom: 1.5rem;
+      color: #718096;
+    }
+
+    .help-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      border: 1px solid #667eea;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd8;
+    }
+
+    .btn-outline {
+      background: white;
+      color: #667eea;
+      border: 1px solid #667eea;
+    }
+
+    .btn-outline:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .faq-categories {
+        gap: 0.25rem;
+      }
+
+      .category-btn {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+      }
+
+      .help-actions {
+        flex-direction: column;
+      }
+
+      .faq-question {
+        padding: 1rem;
+      }
+
+      .faq-answer p {
+        padding: 1rem;
+      }
+    }
+  </style>
+</body>
+</html>

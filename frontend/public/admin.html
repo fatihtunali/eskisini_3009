@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Panel - Eskisini Ver Yenisini Al</title>
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+    .admin-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem 0; }
+    .stats-card { background: white; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .stat-number { font-size: 2rem; font-weight: 700; color: #667eea; }
+    .listing-card { background: white; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .status-badge { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: 500; }
+    .status-pending { background-color: #fff3cd; color: #856404; }
+    .status-active { background-color: #d1edff; color: #0c5460; }
+    .status-rejected { background-color: #f8d7da; color: #721c24; }
+    .btn-approve { background-color: #198754; border-color: #198754; color: white; }
+    .btn-reject { background-color: #dc3545; border-color: #dc3545; color: white; }
+    .nav-tabs .nav-link.active { background-color: #667eea; border-color: #667eea; color: white; }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1><i class="fas fa-cog me-2"></i>Admin Panel</h1>
+        <div>
+          <span id="adminUserName">Admin</span>
+          <button onclick="showDashboard(event)" class="btn btn-light btn-sm ms-2" type="button">
+            <i class="fas fa-home me-1"></i>Dashboard
+          </button>
+          <button onclick="logout()" class="btn btn-outline-light btn-sm ms-2">
+            <i class="fas fa-sign-out-alt me-1"></i>Çıkış
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-4">
+    <!-- Stats -->
+    <div class="row mb-4" id="statsContainer">
+      <div class="col-md-3">
+        <div class="stats-card text-center">
+          <div class="stat-number" id="statPending">-</div>
+          <div class="text-muted">İnceleme Bekleyen</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card text-center">
+          <div class="stat-number text-success" id="statActive">-</div>
+          <div class="text-muted">Aktif İlanlar</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card text-center">
+          <div class="stat-number text-danger" id="statRejected">-</div>
+          <div class="text-muted">Reddedilen</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card text-center">
+          <div class="stat-number text-info" id="statUsers">-</div>
+          <div class="text-muted">Toplam Kullanıcı</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" data-tab="pending">
+          <i class="fas fa-clock me-1"></i>İnceleme Bekleyenler (<span id="pendingCount">0</span>)
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="all">
+          <i class="fas fa-list me-1"></i>Tüm İlanlar
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="analytics">
+          <i class="fas fa-chart-line me-1"></i>Detaylı Analytics
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="ai-dashboard">
+          <i class="fas fa-robot me-1"></i>AI Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="user-management">
+          <i class="fas fa-users me-1"></i>Kullanıcı Yönetimi
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="category-management">
+          <i class="fas fa-tags me-1"></i>Kategori Yönetimi
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="security-logs">
+          <i class="fas fa-shield-alt me-1"></i>Güvenlik & Loglar
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" data-tab="tests">
+          <i class="fas fa-flask me-1"></i>Testler
+        </a>
+      </li>
+    </ul>
+
+    <!-- Content -->
+    <div class="tab-content">
+      <!-- Filters -->
+      <div class="row mb-3" id="listingFilters">
+        <div class="col-md-4">
+          <input type="search" class="form-control" id="searchInput" placeholder="İlan başlığı, açıklama veya kullanıcı adı ara...">
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" id="statusFilter">
+            <option value="">Tüm Durumlar</option>
+            <option value="pending_review">İnceleme Bekleyen</option>
+            <option value="active">Aktif</option>
+            <option value="rejected">Reddedilen</option>
+            <option value="sold">Satıldı</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary" onclick="loadListings()">
+            <i class="fas fa-search me-1"></i>Filtrele
+          </button>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="btn-group" style="display: none;" id="bulkActionsListing">
+            <button class="btn btn-sm btn-outline-secondary" onclick="toggleSelectAllListings()">
+              <i class="fas fa-check-square me-1"></i><span id="selectAllListingsText">Tümünü Seç</span>
+            </button>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-cogs me-1"></i>Toplu İşlemler (<span id="selectedListingsCount">0</span>)
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="bulkActionListings('approve')">
+                  <i class="fas fa-check text-success me-1"></i>Onayla
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="showBulkRejectModal()">
+                  <i class="fas fa-times text-danger me-1"></i>Reddet
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="bulkActionListings('pause')">
+                  <i class="fas fa-pause text-warning me-1"></i>Duraklat
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" onclick="bulkActionListings('feature')">
+                  <i class="fas fa-star text-primary me-1"></i>Öne Çıkar
+                </a></li>
+                <li><a class="dropdown-item" href="#" onclick="bulkActionListings('unfeature')">
+                  <i class="fas fa-star-o text-muted me-1"></i>Öne Çıkarmayı Kaldır
+                </a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" onclick="bulkActionListings('ai-check')">
+                  <i class="fas fa-robot text-info me-1"></i>AI Kontrolü Yap
+                </a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loadingIndicator" class="text-center py-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Yükleniyor...</span>
+        </div>
+        <div class="mt-2 text-muted">İlanlar yükleniyor...</div>
+      </div>
+
+      <!-- Listings -->
+      <div id="listingsContainer"></div>
+
+      <!-- Analytics Dashboard -->
+      <div id="analyticsContainer" style="display: none;">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-info" id="totalUsers">-</div>
+              <div class="text-muted">Toplam Kullanıcı</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-success" id="verifiedUsers">-</div>
+              <div class="text-muted">Doğrulanmış</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-warning" id="soldListings">-</div>
+              <div class="text-muted">Satılan İlanlar</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-primary" id="totalRevenue">-</div>
+              <div class="text-muted">Toplam Gelir</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-chart-line me-2"></i>30 Günlük Büyüme</h5>
+              <canvas id="growthChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-chart-pie me-2"></i>Kategori Dağılımı</h5>
+              <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-trophy me-2"></i>En İyi Satıcılar</h5>
+              <div id="topSellersTable"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-clock me-2"></i>Son 24 Saat Aktivitesi</h5>
+              <div id="recentActivityList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Dashboard -->
+      <div id="aiDashboardContainer" style="display: none;">
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-success" id="aiAutoApproved">-</div>
+              <div class="text-muted">Otomatik Onaylanan</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-danger" id="aiAutoRejected">-</div>
+              <div class="text-muted">Otomatik Reddedilen</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-warning" id="aiFlagged">-</div>
+              <div class="text-muted">Manuel İnceleme</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-primary" id="aiAvgConfidence">-</div>
+              <div class="text-muted">Ortalama Güven</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-chart-pie me-2"></i>Risk Seviyesi Dağılımı</h5>
+              <div id="riskLevelChart"></div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-chart-bar me-2"></i>Güven Skoru Dağılımı</h5>
+              <div id="confidenceChart"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <h5><i class="fas fa-history me-2"></i>Son AI Kontrolleri</h5>
+          <div class="table-responsive">
+            <table class="table table-sm" id="recentChecksTable">
+              <thead>
+                <tr>
+                  <th>İlan</th>
+                  <th>Güven</th>
+                  <th>Risk</th>
+                  <th>Aksiyon</th>
+                  <th>Kaynak</th>
+                  <th>Tarih</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management -->
+      <div id="userManagementContainer" style="display: none;">
+        <div class="row mb-3" id="userFilters">
+          <div class="col-md-3">
+            <input type="search" class="form-control" id="userSearchInput" placeholder="Kullanıcı adı veya e-posta ara...">
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="userStatusFilter">
+              <option value="">Tüm Kullanıcılar</option>
+              <option value="active">Aktif</option>
+              <option value="suspended">Askıya Alınmış</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="kycStatusFilter">
+              <option value="">Tüm KYC Durumları</option>
+              <option value="none">KYC Yok</option>
+              <option value="pending">KYC Bekliyor</option>
+              <option value="verified">KYC Doğrulandı</option>
+              <option value="rejected">KYC Reddedildi</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select class="form-select" id="planFilter">
+              <option value="">Tüm Planlar</option>
+              <option value="free">Ücretsiz</option>
+              <option value="basic">Temel</option>
+              <option value="premium">Premium</option>
+              <option value="pro">Pro</option>
+            </select>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-primary" onclick="loadUsers()">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="col-md-4 text-end">
+            <div class="btn-group" style="display: none;" id="bulkActionsUsers">
+              <button class="btn btn-sm btn-outline-secondary" onclick="toggleSelectAllUsers()">
+                <i class="fas fa-check-square me-1"></i><span id="selectAllUsersText">Tümünü Seç</span>
+              </button>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  <i class="fas fa-cogs me-1"></i>Toplu İşlemler (<span id="selectedUsersCount">0</span>)
+                </button>
+                <ul class="dropdown-menu">
+                  <li><h6 class="dropdown-header">Durum İşlemleri</h6></li>
+                  <li><a class="dropdown-item" href="#" onclick="showBulkSuspendModal()">
+                    <i class="fas fa-ban text-danger me-1"></i>Askıya Al
+                  </a></li>
+                  <li><a class="dropdown-item" href="#" onclick="bulkActionUsers('unsuspend')">
+                    <i class="fas fa-check text-success me-1"></i>Askıları Kaldır
+                  </a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><h6 class="dropdown-header">KYC İşlemleri</h6></li>
+                  <li><a class="dropdown-item" href="#" onclick="bulkActionUsers('kyc_approve')">
+                    <i class="fas fa-user-check text-success me-1"></i>KYC Onayla
+                  </a></li>
+                  <li><a class="dropdown-item" href="#" onclick="bulkActionUsers('kyc_reject')">
+                    <i class="fas fa-user-times text-danger me-1"></i>KYC Reddet
+                  </a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><h6 class="dropdown-header">Plan İşlemleri</h6></li>
+                  <li><a class="dropdown-item" href="#" onclick="bulkActionUsers('upgrade_basic')">
+                    <i class="fas fa-arrow-up text-info me-1"></i>Temel Plana Yükselt
+                  </a></li>
+                  <li><a class="dropdown-item" href="#" onclick="bulkActionUsers('upgrade_premium')">
+                    <i class="fas fa-crown text-warning me-1"></i>Premium Plana Yükselt
+                  </a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="usersContainer"></div>
+
+        <nav class="mt-4">
+          <ul class="pagination justify-content-center" id="userPagination">
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Category Management -->
+      <div id="categoryManagementContainer" style="display: none;">
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-plus me-2"></i>Yeni Kategori Ekle</h5>
+              <form id="addCategoryForm">
+                <div class="mb-3">
+                  <label for="categoryName" class="form-label">Kategori Adı</label>
+                  <input type="text" class="form-control" id="categoryName" required>
+                </div>
+                <div class="mb-3">
+                  <label for="categorySlug" class="form-label">URL Slug</label>
+                  <input type="text" class="form-control" id="categorySlug" placeholder="otomatik-olusturulacak">
+                </div>
+                <div class="mb-3">
+                  <label for="categoryDescription" class="form-label">Açıklama</label>
+                  <textarea class="form-control" id="categoryDescription" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="categoryParent" class="form-label">Üst Kategori</label>
+                  <select class="form-select" id="categoryParent">
+                    <option value="">Ana Kategori</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="categorySortOrder" class="form-label">Sıralama</label>
+                  <input type="number" class="form-control" id="categorySortOrder" value="0" min="0">
+                  <div class="form-text">Düşük sayılar önce gösterilir</div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-plus me-1"></i>Kategori Ekle
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="stats-card">
+              <h5><i class="fas fa-chart-bar me-2"></i>Kategori İstatistikleri</h5>
+              <div id="categoryStatsContainer"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5><i class="fas fa-list me-2"></i>Mevcut Kategoriler</h5>
+            <div>
+              <button class="btn btn-sm btn-outline-primary" onclick="loadCategories()">
+                <i class="fas fa-refresh me-1"></i>Yenile
+              </button>
+            </div>
+          </div>
+          <div id="categoriesContainer"></div>
+        </div>
+      </div>
+
+      <!-- Security & Logs Dashboard -->
+      <div id="securityLogsContainer" style="display: none;">
+        <!-- Security Overview -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-danger" id="securityCritical">-</div>
+              <div class="text-muted">Kritik Olaylar</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-warning" id="securityHigh">-</div>
+              <div class="text-muted">Yüksek Risk</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-info" id="failedLogins">-</div>
+              <div class="text-muted">Başarısız Giriş</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card text-center">
+              <div class="stat-number text-success" id="totalActions">-</div>
+              <div class="text-muted">Toplam İşlem</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Tabs -->
+        <ul class="nav nav-tabs mb-4" id="securityTabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#" data-security-tab="security-events">
+              <i class="fas fa-exclamation-triangle me-1"></i>Güvenlik Olayları
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-security-tab="activity-logs">
+              <i class="fas fa-list-alt me-1"></i>Aktivite Logları
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-security-tab="admin-sessions">
+              <i class="fas fa-user-shield me-1"></i>Admin Oturumları
+            </a>
+          </li>
+        </ul>
+
+        <!-- Security Events -->
+        <div id="securityEventsContainer">
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <select class="form-select" id="eventTypeFilter">
+                <option value="">Tüm Olay Türleri</option>
+                <option value="login_failed">Başarısız Giriş</option>
+                <option value="login_success">Başarılı Giriş</option>
+                <option value="password_changed">Şifre Değişimi</option>
+                <option value="suspicious_activity">Şüpheli Aktivite</option>
+                <option value="account_locked">Hesap Kilidi</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" id="severityFilter">
+                <option value="">Tüm Seviyeler</option>
+                <option value="critical">Kritik</option>
+                <option value="high">Yüksek</option>
+                <option value="medium">Orta</option>
+                <option value="low">Düşük</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" id="resolvedFilter">
+                <option value="">Tüm Durumlar</option>
+                <option value="0">Çözülmemiş</option>
+                <option value="1">Çözülmüş</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary" onclick="loadSecurityEvents()">
+                <i class="fas fa-search me-1"></i>Filtrele
+              </button>
+            </div>
+            <div class="col-md-3 text-end">
+              <button class="btn btn-outline-success btn-sm" onclick="markAllResolved()">
+                <i class="fas fa-check-double me-1"></i>Tümünü Çözümlendi İşaretle
+              </button>
+            </div>
+          </div>
+
+          <div class="stats-card">
+            <div id="securityEventsTable"></div>
+          </div>
+        </div>
+
+        <!-- Activity Logs -->
+        <div id="activityLogsContainer" style="display: none;">
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <input type="search" class="form-control" id="activitySearchInput" placeholder="Kullanıcı, işlem ara...">
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" id="actionFilter">
+                <option value="">Tüm İşlemler</option>
+                <option value="create">Oluşturma</option>
+                <option value="update">Güncelleme</option>
+                <option value="delete">Silme</option>
+                <option value="login">Giriş</option>
+                <option value="logout">Çıkış</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select class="form-select" id="resourceFilter">
+                <option value="">Tüm Kaynaklar</option>
+                <option value="user">Kullanıcı</option>
+                <option value="listing">İlan</option>
+                <option value="category">Kategori</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary" onclick="loadActivityLogs()">
+                <i class="fas fa-search me-1"></i>Filtrele
+              </button>
+            </div>
+          </div>
+
+          <div class="stats-card">
+            <div id="activityLogsTable"></div>
+          </div>
+        </div>
+
+        <!-- Admin Sessions -->
+        <div id="adminSessionsContainer" style="display: none;">
+          <div class="stats-card">
+            <h5><i class="fas fa-user-shield me-2"></i>Aktif Admin Oturumları</h5>
+            <div id="adminSessionsTable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center" id="pagination">
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Rejection Modal -->
+  <div class="modal fade" id="rejectionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">İlan Reddetme</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="rejectionReason" class="form-label">Reddetme Sebebi:</label>
+            <textarea class="form-control" id="rejectionReason" rows="3" placeholder="Reddetme sebebini açıklayın..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" onclick="confirmReject()">Reddet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suspend User Modal -->
+  <div class="modal fade" id="suspendUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kullanıcıyı Askıya Al</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="suspensionReason" class="form-label">Askıya Alma Sebebi:</label>
+            <textarea class="form-control" id="suspensionReason" rows="3" placeholder="Askıya alma sebebini açıklayın..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" onclick="confirmSuspendUser()">Askıya Al</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal fade" id="userDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kullanıcı Detayları</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="userDetailsContent"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Reject Modal -->
+  <div class="modal fade" id="bulkRejectModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Toplu İlan Reddetme</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Seçili <strong><span id="bulkRejectCount">0</span></strong> ilanı reddetmek istediğinizden emin misiniz?</p>
+          <div class="mb-3">
+            <label for="bulkRejectionReason" class="form-label">Reddetme Sebebi:</label>
+            <textarea class="form-control" id="bulkRejectionReason" rows="3" placeholder="Reddetme sebebini açıklayın..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" onclick="confirmBulkReject()">Reddet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Category Modal -->
+  <div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Kategori Düzenle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editCategoryForm">
+            <input type="hidden" id="editCategoryId">
+            <div class="mb-3">
+              <label for="editCategoryName" class="form-label">Kategori Adı</label>
+              <input type="text" class="form-control" id="editCategoryName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editCategorySlug" class="form-label">URL Slug</label>
+              <input type="text" class="form-control" id="editCategorySlug" required>
+            </div>
+            <div class="mb-3">
+              <label for="editCategoryDescription" class="form-label">Açıklama</label>
+              <textarea class="form-control" id="editCategoryDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="editCategoryParent" class="form-label">Üst Kategori</label>
+              <select class="form-select" id="editCategoryParent">
+                <option value="">Ana Kategori</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editCategorySortOrder" class="form-label">Sıralama</label>
+              <input type="number" class="form-control" id="editCategorySortOrder" value="0" min="0">
+              <div class="form-text">Düşük sayılar önce gösterilir</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-primary" onclick="updateCategory()">Güncelle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Suspend Modal -->
+  <div class="modal fade" id="bulkSuspendModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Toplu Kullanıcı Askıya Alma</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Seçili <strong><span id="bulkSuspendCount">0</span></strong> kullanıcıyı askıya almak istediğinizden emin misiniz?</p>
+          <div class="mb-3">
+            <label for="bulkSuspensionReason" class="form-label">Askıya Alma Sebebi:</label>
+            <textarea class="form-control" id="bulkSuspensionReason" rows="3" placeholder="Askıya alma sebebini açıklayın..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+          <button type="button" class="btn btn-danger" onclick="confirmBulkSuspend()">Askıya Al</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts - Resilient Loading System -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('admin');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for admin page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

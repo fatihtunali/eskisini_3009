@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (TR uyumlu, latin-ext) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Yardım | Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930" />
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <main class="container section">
+    <div class="help-page">
+      <h1 class="page-title">Yardım Merkezi</h1>
+      <p class="page-subtitle">Eskisini Ver Yenisini Al platformunda size yardımcı olmak için buradayız.</p>
+
+      <!-- Arama -->
+      <div class="help-search">
+        <div class="search-box">
+          <input type="text" id="helpSearch" placeholder="Yardım konularında ara...">
+          <button onclick="searchHelp()">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Popüler Konular -->
+      <section class="help-section">
+        <h2>Popüler Yardım Konuları</h2>
+        <div class="help-grid">
+          <div class="help-card" onclick="showHelpTopic('account')">
+            <div class="help-icon">👤</div>
+            <h3>Hesap Yönetimi</h3>
+            <p>Hesap oluşturma, giriş yapma ve profil ayarları</p>
+          </div>
+
+          <div class="help-card" onclick="showHelpTopic('listing')">
+            <div class="help-icon">📝</div>
+            <h3>İlan Verme</h3>
+            <p>Nasıl ilan verilir, foto ekleme ve kategori seçimi</p>
+          </div>
+
+          <div class="help-card" onclick="showHelpTopic('buying')">
+            <div class="help-icon">🛒</div>
+            <h3>Alım İşlemleri</h3>
+            <p>Ürün satın alma, ödeme yöntemleri ve güvenli alışveriş</p>
+          </div>
+
+          <div class="help-card" onclick="showHelpTopic('trading')">
+            <div class="help-icon">🔄</div>
+            <h3>Takas İşlemleri</h3>
+            <p>Takas teklifleri, karşılıklı değişim ve güvenli takas</p>
+          </div>
+
+          <div class="help-card" onclick="showHelpTopic('safety')">
+            <div class="help-icon">🛡️</div>
+            <h3>Güvenlik</h3>
+            <p>Güvenli alışveriş ipuçları ve dolandırıcılık korunması</p>
+          </div>
+
+          <div class="help-card" onclick="showHelpTopic('technical')">
+            <div class="help-icon">⚙️</div>
+            <h3>Teknik Destek</h3>
+            <p>Site kullanımı, uygulama sorunları ve teknik yardım</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Yardım İçeriği -->
+      <section class="help-content" id="helpContent">
+        <div class="help-topic" id="defaultContent">
+          <h2>Nasıl Yardım Edebiliriz?</h2>
+          <p>Yukarıdaki konulardan birini seçerek başlayabilir veya arama kutusunu kullanarak spesifik bir konu arayabilirsiniz.</p>
+
+          <h3>Hızlı Bağlantılar</h3>
+          <ul class="quick-links">
+            <li><a href="/register.html">Hesap Oluştur</a></li>
+            <li><a href="/sell.html">İlan Ver</a></li>
+            <li><a href="/contact.html">İletişim</a></li>
+            <li><a href="/privacy.html">Gizlilik Politikası</a></li>
+            <li><a href="/terms.html">Kullanım Şartları</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- İletişim -->
+      <section class="help-contact">
+        <div class="contact-card">
+          <h3>Hala yardıma mı ihtiyacınız var?</h3>
+          <p>Sorununuzun cevabını bulamadıysanız, bizimle iletişime geçin.</p>
+          <div class="contact-options">
+            <a href="/contact.html" class="btn btn-primary">İletişim Formu</a>
+            <a href="mailto:destek@eskisiniveryenisinial.com" class="btn btn-outline">E-posta Gönder</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('help');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for help page');
+        initializePage();
+      }
+    }, 2000);
+
+    // Help page functionality
+    function initializeHelpPage() {
+
+    const helpTopics = {
+      account: {
+        title: 'Hesap Yönetimi',
+        content: `
+          <h3>Hesap Oluşturma</h3>
+          <p>Yeni hesap oluşturmak için:</p>
+          <ol>
+            <li>Sağ üstteki "Kayıt Ol" butonuna tıklayın</li>
+            <li>E-posta adresinizi ve gerekli bilgileri girin</li>
+            <li>Şifrenizi belirleyin (en az 6 karakter)</li>
+            <li>"Hesabımı Oluştur" butonuna tıklayın</li>
+          </ol>
+
+          <h3>Giriş Yapma</h3>
+          <p>Hesabınıza giriş yapmak için e-posta adresiniz ve şifrenizi kullanın.</p>
+
+          <h3>Profil Güncelleme</h3>
+          <p>Profil sayfasından kişisel bilgilerinizi güncelleyebilir, avatar ekleyebilirsiniz.</p>
+        `
+      },
+      listing: {
+        title: 'İlan Verme',
+        content: `
+          <h3>Yeni İlan Oluşturma</h3>
+          <p>İlan vermek için:</p>
+          <ol>
+            <li>"İlan Ver" butonuna tıklayın</li>
+            <li>Ürün kategorisini seçin</li>
+            <li>Başlık ve açıklama yazın</li>
+            <li>Fiyat belirleyin</li>
+            <li>Fotoğraf ekleyin (isteğe bağlı)</li>
+            <li>İlanınızı yayınlayın</li>
+          </ol>
+
+          <h3>İyi İlan İpuçları</h3>
+          <ul>
+            <li>Net ve açıklayıcı başlık kullanın</li>
+            <li>Ürünün durumunu detaylı açıklayın</li>
+            <li>Kaliteli fotoğraflar ekleyin</li>
+            <li>Gerçekçi fiyat belirleyin</li>
+          </ul>
+        `
+      },
+      buying: {
+        title: 'Alım İşlemleri',
+        content: `
+          <h3>Ürün Satın Alma</h3>
+          <p>Güvenli alışveriş için:</p>
+          <ol>
+            <li>Ürün detaylarını dikkatle inceleyin</li>
+            <li>Satıcı puanlarını kontrol edin</li>
+            <li>Satıcıyla mesajlaşarak sorularınızı sorun</li>
+            <li>"Satın Al" butonuna tıklayın</li>
+            <li>Ödeme işlemini tamamlayın</li>
+          </ol>
+
+          <h3>Güvenli Alışveriş</h3>
+          <ul>
+            <li>Sadece doğrulanmış satıcılardan alım yapın</li>
+            <li>Buluşma yerini güvenli bir yer seçin</li>
+            <li>Ürünü teslim almadan önce kontrol edin</li>
+          </ul>
+        `
+      },
+      trading: {
+        title: 'Takas İşlemleri',
+        content: `
+          <h3>Takas Teklifi Verme</h3>
+          <p>Takas yapmak için:</p>
+          <ol>
+            <li>Takas yapmak istediğiniz ürüne gidin</li>
+            <li>"Takas Teklif Et" butonuna tıklayın</li>
+            <li>Sunacağınız ürünü belirtin</li>
+            <li>Gerekirse ek nakit teklifi yapın</li>
+            <li>Teklifinizi gönderin</li>
+          </ol>
+
+          <h3>Başarılı Takas İpuçları</h3>
+          <ul>
+            <li>Eşit değerde ürünler teklif edin</li>
+            <li>Ürünlerinizin durumunu net belirtin</li>
+            <li>Karşılıklı güven oluşturun</li>
+          </ul>
+        `
+      },
+      safety: {
+        title: 'Güvenlik',
+        content: `
+          <h3>Güvenli Alışveriş İpuçları</h3>
+          <ul>
+            <li>Kişisel bilgilerinizi paylaşmayın</li>
+            <li>Platform dışında ödeme yapmayın</li>
+            <li>Şüpheli davranışları bildirin</li>
+            <li>Buluşmaları güvenli yerlerde yapın</li>
+          </ul>
+
+          <h3>Dolandırıcılık Belirtileri</h3>
+          <ul>
+            <li>Çok düşük fiyatlar</li>
+            <li>Acil ödeme talepleri</li>
+            <li>Platform dışı iletişim zorunluluğu</li>
+            <li>Sahte kimlik bilgileri</li>
+          </ul>
+        `
+      },
+      technical: {
+        title: 'Teknik Destek',
+        content: `
+          <h3>Yaygın Teknik Sorunlar</h3>
+
+          <h4>Giriş Yapamıyorum</h4>
+          <ul>
+            <li>E-posta adresinizi kontrol edin</li>
+            <li>Şifrenizi sıfırlamayı deneyin</li>
+            <li>Tarayıcı çerezlerini temizleyin</li>
+          </ul>
+
+          <h4>Sayfa Yüklenmiyor</h4>
+          <ul>
+            <li>İnternet bağlantınızı kontrol edin</li>
+            <li>Tarayıcınızı yenileyin (F5)</li>
+            <li>Farklı bir tarayıcı deneyin</li>
+          </ul>
+
+          <h4>Mobil Uygulama</h4>
+          <p>Mobil uygulamamız yakında kullanıma sunulacak.</p>
+        `
+      }
+    };
+
+    function showHelpTopic(topicKey) {
+      const topic = helpTopics[topicKey];
+      if (topic) {
+        const contentDiv = document.getElementById('helpContent');
+        contentDiv.innerHTML = `
+          <div class="help-topic">
+            <h2>${topic.title}</h2>
+            ${topic.content}
+            <button class="btn btn-outline" onclick="showDefaultContent()">← Geri Dön</button>
+          </div>
+        `;
+      }
+    }
+
+    function showDefaultContent() {
+      const contentDiv = document.getElementById('helpContent');
+      contentDiv.innerHTML = document.getElementById('defaultContent').outerHTML;
+    }
+
+    function searchHelp() {
+      const query = document.getElementById('helpSearch').value.toLowerCase();
+      if (!query) return;
+
+      // Basit arama - gerçek uygulamada backend'den gelir
+      let found = false;
+      for (const [key, topic] of Object.entries(helpTopics)) {
+        if (topic.title.toLowerCase().includes(query) ||
+            topic.content.toLowerCase().includes(query)) {
+          showHelpTopic(key);
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        const contentDiv = document.getElementById('helpContent');
+        contentDiv.innerHTML = `
+          <div class="help-topic">
+            <h2>Arama Sonuçları</h2>
+            <p>"${query}" için sonuç bulunamadı.</p>
+            <p>Farklı anahtar kelimeler deneyebilir veya <a href="/contact.html">bizimle iletişime</a> geçebilirsiniz.</p>
+            <button class="btn btn-outline" onclick="showDefaultContent()">← Geri Dön</button>
+          </div>
+        `;
+      }
+    }
+
+    // Enter tuşuyla arama
+    document.getElementById('helpSearch').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchHelp();
+      }
+    });
+    }
+
+    // Initialize help page functionality when dependencies are loaded
+    document.addEventListener('dependenciesLoaded', initializeHelpPage);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        initializeHelpPage();
+      }
+    }, 2000);
+  </script>
+
+  <style>
+    .help-page {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #1a202c;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: #718096;
+      margin-bottom: 3rem;
+    }
+
+    .help-search {
+      margin-bottom: 3rem;
+    }
+
+    .search-box {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      border-right: none;
+      font-size: 1rem;
+    }
+
+    .search-box button {
+      padding: 1rem 1.5rem;
+      background: #667eea;
+      color: white;
+      border: 1px solid #667eea;
+      cursor: pointer;
+    }
+
+    .help-section {
+      margin-bottom: 3rem;
+    }
+
+    .help-section h2 {
+      margin-bottom: 2rem;
+      color: #2d3748;
+    }
+
+    .help-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .help-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .help-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .help-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .help-card h3 {
+      margin-bottom: 1rem;
+      color: #2d3748;
+    }
+
+    .help-card p {
+      color: #718096;
+      margin: 0;
+    }
+
+    .help-content {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+
+    .help-topic h2 {
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+    }
+
+    .help-topic h3 {
+      color: #4a5568;
+      margin: 1.5rem 0 1rem 0;
+    }
+
+    .help-topic h4 {
+      color: #718096;
+      margin: 1rem 0 0.5rem 0;
+    }
+
+    .quick-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .quick-links li {
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-links a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .quick-links a:hover {
+      text-decoration: underline;
+    }
+
+    .help-contact {
+      text-align: center;
+    }
+
+    .contact-card {
+      background: #f7fafc;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .contact-options {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      border: 1px solid #667eea;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd8;
+    }
+
+    .btn-outline {
+      background: white;
+      color: #667eea;
+      border: 1px solid #667eea;
+    }
+
+    .btn-outline:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .help-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-options {
+        flex-direction: column;
+      }
+    }
+  </style>
+</body>
+</html>

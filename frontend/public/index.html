@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter (latin-ext) + Poppins for titles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Eskisini ver, yenisini al! Türkiye'nin güvenilir ikinci el & takas platformu. Kategoriye göre ara, filtrele, satın al.">
+  <!-- CSP is set by server headers, NOT meta tags -->
+  <title>Eskisini Ver Yenisini Al</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/product-card.css?v=20250930">
+  <link rel="stylesheet" href="/css/home.css?v=20250930">
+  <link rel="stylesheet" href="/css/home-hero.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <!-- CSP COMPLIANCE: All inline styles moved to /css/home-hero.css -->
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <!-- MODERN HERO -->
+  <section class="modern-hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="title-part-1">Eskisini Ver</span><br>
+          <span class="title-part-2">Yenisini Al</span>
+        </h1>
+        <p class="hero-subtitle">
+          Türkiye'nin en güvenilir sürdürülebilir alışveriş platformu
+        </p>
+        
+      </div>
+    </div>
+  </section>
+
+
+  <!-- MAIN CONTENT AREA -->
+  <section class="main-content-section">
+    <div class="container">
+      <div class="row">
+        <!-- LEFT SIDEBAR - FILTERS & CATEGORIES -->
+        <div class="col-lg-3 col-md-4">
+          <!-- Detaylı Arama Filtreleri -->
+          <div class="search-filters mb-4">
+            <div class="sidebar-header">
+              <h5><i class="fas fa-filter me-2"></i>Detaylı Arama</h5>
+            </div>
+            <div class="filter-content">
+              <!-- Fiyat Aralığı -->
+              <div class="filter-group mb-3">
+                <label class="form-label fw-semibold">Fiyat Aralığı</label>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <input type="number" class="form-control form-control-sm" placeholder="Min ₺" id="priceMin">
+                  </div>
+                  <div class="col-6">
+                    <input type="number" class="form-control form-control-sm" placeholder="Max ₺" id="priceMax">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Konum -->
+              <div class="filter-group mb-3">
+                <label class="form-label fw-semibold">Konum</label>
+                <select class="form-select form-select-sm" id="locationFilter">
+                  <option value="">Tüm Şehirler</option>
+                  <!-- JavaScript ile doldurulacak -->
+                </select>
+              </div>
+
+              <!-- Durum -->
+              <div class="filter-group mb-3">
+                <label class="form-label fw-semibold">Ürün Durumu</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="conditionNew">
+                  <label class="form-check-label" for="conditionNew">Sıfır</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="conditionUsed">
+                  <label class="form-check-label" for="conditionUsed">İkinci El</label>
+                </div>
+              </div>
+
+              <!-- Filtre Uygula -->
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-sm" id="applyFilters">
+                  <i class="fas fa-search me-1"></i>Filtrele
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                  <i class="fas fa-times me-1"></i>Temizle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kategoriler -->
+          <div class="categories-sidebar">
+            <div class="categories-list" id="categoriesTree">
+              <!-- JavaScript ile doldurulacak -->
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT CONTENT - SELLERS & PRODUCTS -->
+        <div class="col-lg-9 col-md-8">
+          <!-- Featured Sellers Section -->
+          <div class="products-content mb-4">
+            <div class="content-header">
+              <h4><i class="fas fa-star me-2"></i>Öne Çıkan Satıcılar</h4>
+            </div>
+            <div class="sellers-list" id="featuredSellers">
+              <!-- JavaScript ile doldurulacak -->
+            </div>
+          </div>
+
+          <!-- Products Section -->
+          <div class="products-content">
+            <div class="content-header">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 id="contentTitle"><i class="fas fa-star me-2"></i>Öne Çıkan İlanlar</h4>
+                <div class="d-flex align-items-center gap-3">
+                  <select class="form-select form-select-sm" id="sortSelect" style="width: auto;">
+                    <option value="newest">En Yeni</option>
+                    <option value="price_asc">Fiyat (Düşük → Yüksek)</option>
+                    <option value="price_desc">Fiyat (Yüksek → Düşük)</option>
+                    <option value="popular">En Popüler</option>
+                  </select>
+                  <div class="results-count text-muted">
+                    <span id="resultsCount">0</span> ilan bulundu
+                  </div>
+                  <div class="view-options">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-outline-secondary btn-sm active" id="listView">
+                        <i class="fas fa-list"></i>
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm" id="gridView">
+                        <i class="fas fa-th"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Products List -->
+            <div class="products-container" id="productsContainer">
+              <div class="products-list" id="productsList">
+                <!-- JavaScript ile doldurulacak -->
+              </div>
+
+              <!-- Loading Indicator -->
+              <div class="loading-indicator text-center py-4" id="loadingIndicator" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+                <div class="mt-2">İlanlar yükleniyor...</div>
+              </div>
+
+              <!-- Load More Button -->
+              <div class="text-center mt-4">
+                <button class="btn btn-outline-primary" id="loadMoreBtn" style="display: none;">
+                  <i class="fas fa-plus me-2"></i>Daha Fazla İlan
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+
+  <!-- UNIVERSAL SCRIPT LOADER - Bypasses muvhost.com aggressive caching -->
+  <script>
+    // Load with timestamp to bypass ALL caching
+    (function() {
+      const script = document.createElement('script');
+      script.src = '/js/dependency-manager-v2.js?t=' + Date.now();
+      document.head.appendChild(script);
+    })();
+  </script>
+
+</body>
+</html>

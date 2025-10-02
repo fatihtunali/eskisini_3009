@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Girişi - Eskisini Ver Yenisini Al</title>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .admin-login-card {
+      background: white;
+      border-radius: 15px;
+      padding: 3rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    .admin-title {
+      color: #667eea;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .btn-admin {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-weight: 600;
+    }
+    .form-control {
+      border-radius: 8px;
+      padding: 12px;
+      border: 2px solid #e9ecef;
+    }
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+
+<body>
+  <div class="admin-login-card">
+    <div class="admin-title">
+      <i class="fas fa-shield-alt fa-2x mb-3 d-block"></i>
+      <h2>Admin Paneli</h2>
+      <p class="text-muted">Yönetici Girişi</p>
+    </div>
+
+    <form id="adminLoginForm">
+      <div class="mb-3">
+        <label for="email" class="form-label">E-posta</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label">Şifre</label>
+        <input type="password" class="form-control" id="password" required>
+      </div>
+
+      <button type="submit" class="btn btn-admin btn-primary w-100">
+        <i class="fas fa-sign-in-alt me-2"></i>Admin Girişi
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <a href="/" class="text-muted text-decoration-none">
+        <i class="fas fa-home me-1"></i>Ana Sayfaya Dön
+      </a>
+    </div>
+
+    <div id="errorMsg" class="alert alert-danger mt-3" style="display: none;"></div>
+    <div id="loadingMsg" class="text-center mt-3" style="display: none;">
+      <div class="spinner-border spinner-border-sm text-primary" role="status">
+        <span class="visually-hidden">Yükleniyor...</span>
+      </div>
+      <span class="ms-2">Giriş yapılıyor...</span>
+    </div>
+  </div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('admin-login');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for admin-login page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <script>
+    function initializeAdminLogin() {
+      // Get API_BASE with proper fallbacks
+      let API_BASE = '';
+      if (window.APP && window.APP.API_BASE) {
+        API_BASE = window.APP.API_BASE;
+      } else if (window.GLOBAL_API_BASE) {
+        API_BASE = window.GLOBAL_API_BASE;
+      } else if (window.getCorrectApiBase) {
+        API_BASE = window.getCorrectApiBase();
+      } else {
+        // Production fallback
+        const hostname = window.location.hostname;
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+          API_BASE = 'http://localhost:3000';
+        } else {
+          API_BASE = 'https://api.eskisiniveryenisinial.com';
+        }
+      }
+
+      console.log('🔐 Admin-login: Using API_BASE:', API_BASE);
+
+      document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMsg = document.getElementById('errorMsg');
+      const loadingMsg = document.getElementById('loadingMsg');
+
+      errorMsg.style.display = 'none';
+      loadingMsg.style.display = 'block';
+
+      try {
+        // Login request
+        const loginResponse = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!loginResponse.ok) {
+          throw new Error('Giriş başarısız');
+        }
+
+        // Check if user is admin
+        const meResponse = await fetch(`${API_BASE}/api/auth/me`, {
+          credentials: 'include'
+        });
+
+        if (!meResponse.ok) {
+          throw new Error('Kullanıcı bilgileri alınamadı');
+        }
+
+        const userData = await meResponse.json();
+        const user = userData.user || userData;
+
+        if (!user.is_admin) {
+          throw new Error('Admin yetkisi gereklidir');
+        }
+
+        // Success - redirect to admin panel
+        window.location.href = '/admin.html';
+
+      } catch (error) {
+        console.error('Admin login error:', error);
+        errorMsg.textContent = error.message || 'Giriş yapılırken bir hata oluştu';
+        errorMsg.style.display = 'block';
+      } finally {
+        loadingMsg.style.display = 'none';
+      }
+    });
+    }
+
+    // Initialize admin login when dependencies are loaded
+    document.addEventListener('dependenciesLoaded', initializeAdminLogin);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        initializeAdminLogin();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

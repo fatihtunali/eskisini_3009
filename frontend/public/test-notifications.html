@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Notifications</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Notification CSS -->
+    <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+    <style>
+        body { padding-top: 2rem; }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+        }
+        #userNav {
+            display: flex !important;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Notification System Test</h1>
+
+        <!-- Simulated Header Navigation -->
+        <div class="test-section">
+            <h3>Simulated Header</h3>
+            <div id="userNav">
+                <a class="nav-link" href="#" title="İlan Ver">
+                    <i class="fas fa-plus-circle text-success"></i> İlan Ver
+                </a>
+                <a class="nav-link" href="#" title="Mağazam">
+                    <i class="fas fa-store text-warning"></i> Mağazam
+                </a>
+                <a class="nav-link" href="#" title="Favoriler">
+                    <i class="fas fa-heart text-danger"></i> Favoriler
+                </a>
+                <a class="nav-link position-relative" href="#" id="notificationBell" title="Bildirimler">
+                    <i class="fas fa-bell text-info"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </a>
+                <a class="nav-link" href="#" title="Sepet">
+                    <i class="fas fa-shopping-cart text-primary"></i> Sepet
+                </a>
+
+                <!-- User Dropdown Test -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="userDropdown">
+                        <img src="/assets/default-avatar.png" alt="Avatar" class="rounded-circle" width="28" height="28">
+                        <span id="userName" class="ms-1">Test User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profilim</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-store"></i> Mağaza Ayarları</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-bag"></i> Siparişlerim</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-list"></i> İlanlarım</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Ayarlar</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Controls -->
+        <div class="test-section">
+            <h3>Test Controls</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <button onclick="initNotificationSystem()" class="btn btn-primary mb-2">
+                        🔔 Initialize Notification System
+                    </button>
+                    <br>
+                    <button onclick="showTestToast()" class="btn btn-success mb-2">
+                        🍞 Show Test Toast
+                    </button>
+                    <br>
+                    <button onclick="updateBadgeCount()" class="btn btn-warning mb-2">
+                        🏷️ Update Badge Count
+                    </button>
+                    <br>
+                    <button onclick="togglePanel()" class="btn btn-info mb-2">
+                        📋 Toggle Notification Panel
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button onclick="simulateTradeNotification()" class="btn btn-outline-primary mb-2">
+                        🤝 Simulate Trade Offer
+                    </button>
+                    <br>
+                    <button onclick="simulateMessageNotification()" class="btn btn-outline-success mb-2">
+                        💬 Simulate New Message
+                    </button>
+                    <br>
+                    <button onclick="simulateOrderNotification()" class="btn btn-outline-warning mb-2">
+                        📦 Simulate Order Update
+                    </button>
+                    <br>
+                    <button onclick="clearAllNotifications()" class="btn btn-outline-danger mb-2">
+                        🗑️ Clear All Notifications
+                    </button>
+                    <br>
+                    <button onclick="testDropdown()" class="btn btn-outline-info mb-2">
+                        👤 Test User Dropdown
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Display -->
+        <div class="test-section">
+            <h3>System Status</h3>
+            <div id="statusDisplay">
+                <p><strong>Notification System:</strong> <span id="systemStatus">Not Initialized</span></p>
+                <p><strong>Bell Element:</strong> <span id="bellStatus">Not Found</span></p>
+                <p><strong>Panel Element:</strong> <span id="panelStatus">Not Found</span></p>
+                <p><strong>User Dropdown:</strong> <span id="dropdownStatus">Not Found</span></p>
+                <p><strong>Badge Count:</strong> <span id="badgeStatus">0</span></p>
+            </div>
+        </div>
+
+        <!-- Console Output -->
+        <div class="test-section">
+            <h3>Console Output</h3>
+            <div id="consoleOutput" style="background: #1e1e1e; color: #00ff00; padding: 1rem; border-radius: 0.25rem; font-family: monospace; max-height: 300px; overflow-y: auto;">
+                <!-- Console messages will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts - Resilient Loading System -->
+    <script src="/js/core-loader.js?v=20250930"></script>
+    <script src="/js/dependency-manager.js?v=20250930"></script>
+
+    <script>
+        // Load page-specific scripts if needed
+        document.addEventListener('dependenciesLoaded', () => {
+            if (window.DependencyManager) {
+                window.DependencyManager.loadPageScripts('test-notifications');
+            }
+        });
+
+        // Initialize page with fallback
+        function initializePage() {
+            if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+                window.EssentialFunctions.loadPartials();
+            } else if (typeof includePartials === 'function') {
+                includePartials();
+            }
+        }
+
+        document.addEventListener('dependenciesLoaded', initializePage);
+
+        setTimeout(() => {
+            if (!window.dependenciesLoadedTriggered) {
+                console.log('🔧 Using fallback initialization for test-notifications page');
+                initializePage();
+            }
+        }, 2000);
+
+        // Test notifications functionality
+        function initializeTestNotifications() {
+        // Override console.log to show in our display
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const consoleOutput = document.getElementById('consoleOutput');
+            if (consoleOutput) {
+                const message = args.join(' ');
+                consoleOutput.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+        };
+
+        // Test Functions
+        function initNotificationSystem() {
+            console.log('🔔 Manually initializing notification system...');
+
+            // Simulate auth
+            localStorage.setItem('auth_token', 'test_token');
+            window.currentUser = {
+                id: 1,
+                full_name: 'Test User',
+                email: 'test@example.com'
+            };
+
+            // Initialize
+            if (!window.NotificationSystem) {
+                window.NotificationSystem = new NotificationSystem({
+                    apiBase: '/api',
+                    websocketUrl: 'ws://localhost:3000/ws/notifications'
+                });
+                console.log('✅ Notification system initialized!');
+            } else {
+                console.log('ℹ️ Notification system already exists');
+            }
+
+            updateStatus();
+        }
+
+        function showTestToast() {
+            if (window.NotificationSystem) {
+                const testNotification = {
+                    id: Date.now(),
+                    type: 'system',
+                    title: 'Test Notification',
+                    body: 'This is a test notification to verify the toast system is working!',
+                    created_at: new Date().toISOString()
+                };
+
+                window.NotificationSystem.showToast(testNotification);
+                console.log('🍞 Test toast displayed');
+            } else {
+                alert('Please initialize the notification system first!');
+            }
+        }
+
+        function updateBadgeCount() {
+            const count = Math.floor(Math.random() * 10) + 1;
+            if (window.NotificationSystem) {
+                window.NotificationSystem.updateUnreadCount(count);
+                console.log(`🏷️ Badge count updated to: ${count}`);
+            } else {
+                // Manually update for testing
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = 'block';
+                    console.log(`🏷️ Badge count manually updated to: ${count}`);
+                }
+            }
+            updateStatus();
+        }
+
+        function togglePanel() {
+            if (window.NotificationSystem && window.NotificationSystem.toggleNotificationPanel) {
+                window.NotificationSystem.toggleNotificationPanel();
+                console.log('📋 Notification panel toggled');
+            } else {
+                alert('Please initialize the notification system first!');
+            }
+        }
+
+        function simulateTradeNotification() {
+            if (window.NotificationSystem) {
+                const notification = {
+                    id: Date.now(),
+                    type: 'trade_offer',
+                    title: 'Yeni Takas Teklifi',
+                    body: 'Ahmet Yılmaz size bir takas teklifi gönderdi',
+                    created_at: new Date().toISOString(),
+                    data: { tradeId: 123, senderName: 'Ahmet Yılmaz' }
+                };
+
+                window.NotificationSystem.handleNotification(notification);
+                console.log('🤝 Trade notification simulated');
+            } else {
+                alert('Please initialize the notification system first!');
+            }
+        }
+
+        function simulateMessageNotification() {
+            if (window.NotificationSystem) {
+                const notification = {
+                    id: Date.now() + 1,
+                    type: 'new_message',
+                    title: 'Yeni Mesaj',
+                    body: 'Zeynep Kaya: Merhaba, ürün hakkında soru sormak istiyorum...',
+                    created_at: new Date().toISOString(),
+                    data: { threadId: 456, senderId: 789, senderName: 'Zeynep Kaya' }
+                };
+
+                window.NotificationSystem.handleNotification(notification);
+                console.log('💬 Message notification simulated');
+            } else {
+                alert('Please initialize the notification system first!');
+            }
+        }
+
+        function simulateOrderNotification() {
+            if (window.NotificationSystem) {
+                const notification = {
+                    id: Date.now() + 2,
+                    type: 'order_update',
+                    title: 'Sipariş Güncellendi',
+                    body: 'Siparişiniz kargoya verildi. Takip numarası: TN123456789',
+                    created_at: new Date().toISOString(),
+                    data: { orderId: 789, status: 'shipped', trackingNumber: 'TN123456789' }
+                };
+
+                window.NotificationSystem.handleNotification(notification);
+                console.log('📦 Order notification simulated');
+            } else {
+                alert('Please initialize the notification system first!');
+            }
+        }
+
+        function clearAllNotifications() {
+            if (window.NotificationSystem) {
+                window.NotificationSystem.clearNotifications();
+                console.log('🗑️ All notifications cleared');
+            } else {
+                const badge = document.getElementById('notificationBadge');
+                if (badge) {
+                    badge.style.display = 'none';
+                    badge.textContent = '0';
+                }
+                console.log('🗑️ Badge cleared manually');
+            }
+            updateStatus();
+        }
+
+        function testDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) {
+                console.log('👤 Testing user dropdown...');
+                console.log('Dropdown element found:', dropdown);
+                console.log('Bootstrap available:', typeof bootstrap !== 'undefined');
+
+                // Try to toggle dropdown programmatically
+                if (typeof bootstrap !== 'undefined') {
+                    try {
+                        const dropdownInstance = bootstrap.Dropdown.getOrCreateInstance(dropdown);
+                        dropdownInstance.toggle();
+                        console.log('✅ Dropdown toggled successfully');
+                    } catch (error) {
+                        console.error('❌ Dropdown toggle failed:', error);
+                    }
+                } else {
+                    console.log('❌ Bootstrap not available');
+                }
+            } else {
+                console.log('❌ Dropdown element not found');
+            }
+        }
+
+        function updateStatus() {
+            document.getElementById('systemStatus').textContent =
+                window.NotificationSystem ? 'Initialized ✅' : 'Not Initialized ❌';
+
+            document.getElementById('bellStatus').textContent =
+                document.getElementById('notificationBell') ? 'Found ✅' : 'Not Found ❌';
+
+            document.getElementById('panelStatus').textContent =
+                document.getElementById('notificationPanel') ? 'Found ✅' : 'Not Found ❌';
+
+            document.getElementById('dropdownStatus').textContent =
+                document.getElementById('userDropdown') ? 'Found ✅' : 'Not Found ❌';
+
+            const badge = document.getElementById('notificationBadge');
+            document.getElementById('badgeStatus').textContent =
+                badge ? badge.textContent || '0' : 'Not Found ❌';
+        }
+
+        // Auto-update status
+        setInterval(updateStatus, 1000);
+
+        // Initial status
+        updateStatus();
+
+        console.log('🧪 Notification test page loaded');
+        console.log('📍 Click "Initialize Notification System" to start testing');
+        }
+
+        // Initialize test notifications when dependencies are loaded
+        document.addEventListener('dependenciesLoaded', initializeTestNotifications);
+
+        // Fallback initialization
+        setTimeout(() => {
+            if (!window.dependenciesLoadedTriggered) {
+                initializeTestNotifications();
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

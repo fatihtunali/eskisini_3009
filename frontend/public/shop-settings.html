@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap&subset=latin-ext" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Mağaza ayarlarınızı yönetin - Logo, banner, açıklama ve daha fazlası.">
+  <title>Mağaza Ayarları - Eskisini Ver Yenisini Al</title>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/styles.css?v=20250930">
+  <link rel="stylesheet" href="/css/notifications.css?v=20250930">
+
+  <style>
+    .settings-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .settings-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .settings-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .settings-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #1a202c;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.5rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      text-align: center;
+      background: #f8fafc;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .upload-area:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .current-image {
+      max-width: 200px;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+    }
+
+    .premium-badge {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .feature-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      background: #d1d5db;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle-switch.active {
+      background: #10b981;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(26px);
+    }
+
+    /* İstatistik Kartları */
+    .stat-card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #f1f5f9;
+      height: 100%;
+    }
+
+    .stat-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .stat-content h4 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem;
+      color: #1a202c;
+    }
+
+    .stat-content p {
+      font-size: 0.875rem;
+      color: #64748b;
+      margin: 0;
+    }
+
+    /* Grafik Konteynerleri */
+    .chart-container {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #f1f5f9;
+      height: 100%;
+    }
+
+    .chart-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 300px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .chart-wrapper canvas {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Mobile responsive chart fixes */
+    @media (max-width: 768px) {
+      .chart-wrapper {
+        height: 250px;
+      }
+
+      .chart-container {
+        margin-bottom: 1.5rem;
+      }
+
+      .stat-card {
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .chart-wrapper {
+        height: 200px;
+      }
+
+      .settings-container {
+        padding: 0 10px;
+      }
+    }
+
+    /* Değerlendirme Stilleri */
+    .rating-summary {
+      text-align: center;
+      padding: 2rem;
+      background: #f8fafc;
+      border-radius: 0.75rem;
+      border: 1px solid #f1f5f9;
+    }
+
+    .big-rating {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+    }
+
+    .rating-stars {
+      color: #fbbf24;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .rating-count {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .rating-breakdown .rating-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .rating-label {
+      min-width: 60px;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .rating-bar {
+      flex: 1;
+      height: 8px;
+      background: #f1f5f9;
+      border-radius: 4px;
+      margin: 0 1rem;
+      overflow: hidden;
+    }
+
+    .rating-fill {
+      height: 100%;
+      background: #fbbf24;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .rating-percent {
+      min-width: 40px;
+      font-size: 0.875rem;
+      color: #64748b;
+      text-align: right;
+    }
+
+    .review-item {
+      background: #f8fafc;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #f1f5f9;
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    .review-date {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .review-stars {
+      color: #fbbf24;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .review-text {
+      color: #4a5568;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+
+  </style>
+  <script src="/js/csp-bypass.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div data-include="partials/header.html"></div>
+
+  <!-- SETTINGS HEADER -->
+  <section class="settings-header">
+    <div class="container">
+      <div class="text-center">
+        <h1><i class="fas fa-store me-3"></i>Mağaza Ayarları</h1>
+        <p class="mb-0">Mağazanızı özelleştirin ve yönetin</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS CONTENT -->
+  <div class="container settings-container">
+
+    <!-- GENEL BİLGİLER -->
+    <div class="settings-card">
+      <h3 class="settings-title">
+        <i class="fas fa-info-circle me-2"></i>Genel Bilgiler
+      </h3>
+
+      <form id="generalInfoForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopName">Mağaza Adı *</label>
+              <input type="text" class="form-control" id="shopName" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopCity">Şehir *</label>
+              <select class="form-control" id="shopCity" required>
+                <option value="">Şehir Seçin</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="shopDescription">Mağaza Açıklaması</label>
+          <textarea class="form-control" id="shopDescription" rows="4" placeholder="Mağazanızı tanıtın..."></textarea>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopPhone">Telefon</label>
+              <input type="tel" class="form-control" id="shopPhone" placeholder="+90 555 123 45 67">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopWebsite">Website</label>
+              <input type="url" class="form-control" id="shopWebsite" placeholder="https://www.siteniz.com">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopWhatsApp">WhatsApp Telefon</label>
+              <input type="tel" class="form-control" id="shopWhatsApp" placeholder="+90 555 123 45 67">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label" for="shopInstagram">Instagram Hesabı</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" id="shopInstagram" placeholder="hesapadi">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save me-2"></i>Bilgileri Kaydet
+        </button>
+      </form>
+    </div>
+
+    <!-- GÖRSEL AYARLARI -->
+    <div class="settings-card">
+      <h3 class="settings-title">
+        <i class="fas fa-image me-2"></i>Görsel Ayarları
+        <span class="premium-badge ms-2">Premium</span>
+      </h3>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Mağaza Logosu</h5>
+          <div class="upload-area" onclick="document.getElementById('logoUpload').click()">
+            <div id="currentLogo">
+              <i class="fas fa-upload fa-2x text-muted mb-2"></i>
+              <p class="text-muted mb-0">Logo yüklemek için tıklayın</p>
+              <small class="text-muted">PNG, JPG (max 2MB)</small>
+            </div>
+          </div>
+          <input type="file" id="logoUpload" class="d-none" accept="image/*">
+        </div>
+
+        <div class="col-md-6">
+          <h5>Kapak Fotoğrafı</h5>
+          <div class="upload-area" onclick="document.getElementById('bannerUpload').click()">
+            <div id="currentBanner">
+              <i class="fas fa-upload fa-2x text-muted mb-2"></i>
+              <p class="text-muted mb-0">Banner yüklemek için tıklayın</p>
+              <small class="text-muted">PNG, JPG (max 5MB)</small>
+            </div>
+          </div>
+          <input type="file" id="bannerUpload" class="d-none" accept="image/*">
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button type="button" class="btn btn-primary me-2" onclick="window.shopSettings.uploadShopMedia()">
+          <i class="fas fa-upload me-2"></i>Görselleri Kaydet
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="window.shopSettings.resetImages()">
+          <i class="fas fa-trash me-2"></i>Görselleri Sıfırla
+        </button>
+      </div>
+    </div>
+
+    <!-- PREMIUM ÖZELLİKLER -->
+    <div class="settings-card">
+      <h3 class="settings-title">
+        <i class="fas fa-crown me-2"></i>Premium Özellikler
+      </h3>
+
+      <div class="feature-toggle">
+        <div>
+          <strong>İlan Öne Çıkarma</strong>
+          <br><small class="text-muted">İlanlarınız arama sonuçlarında üstte görünsün</small>
+        </div>
+        <div class="toggle-switch active" data-feature="boost"></div>
+      </div>
+
+      <div class="feature-toggle">
+        <div>
+          <strong>Gelişmiş İstatistikler</strong>
+          <br><small class="text-muted">Detaylı ziyaretçi ve satış analizi</small>
+        </div>
+        <div class="toggle-switch active" data-feature="analytics"></div>
+      </div>
+
+      <div class="feature-toggle">
+        <div>
+          <strong>Ana Sayfa Görünürlüğü</strong>
+          <br><small class="text-muted">Mağazanız ana sayfada öne çıkarılsın</small>
+        </div>
+        <div class="toggle-switch" data-feature="featured"></div>
+      </div>
+
+      <div class="alert alert-info mt-3">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>ModaPoint Ankara</strong> mağazanız aktif premium özelliklerle çalışıyor.
+        <br>300 ilan hakkınız bulunuyor.
+      </div>
+    </div>
+
+    <!-- İSTATİSTİKLER -->
+    <div class="settings-card" id="statisticsSection" style="display: none;">
+      <h3 class="settings-title">
+        <i class="fas fa-chart-line me-2"></i>Satış İstatistikleri
+        <button type="button" class="btn btn-sm btn-outline-secondary float-end" onclick="window.shopSettings.hideStatistics()">
+          <i class="fas fa-times"></i>
+        </button>
+      </h3>
+
+      <!-- İstatistik Kartları -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-primary">
+              <i class="fas fa-eye"></i>
+            </div>
+            <div class="stat-content">
+              <h4 id="totalViews">0</h4>
+              <p>Toplam Görüntülenme</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-success">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div class="stat-content">
+              <h4 id="totalContacts">0</h4>
+              <p>Toplam İletişim</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-info">
+              <i class="fas fa-list"></i>
+            </div>
+            <div class="stat-content">
+              <h4 id="totalListingViews">0</h4>
+              <p>İlan Görüntülenmeleri</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon bg-warning">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+              <h4 id="averageRating">0.0</h4>
+              <p>Ortalama Puan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grafikler -->
+      <div class="row">
+        <div class="col-md-8">
+          <div class="chart-container">
+            <h5 class="chart-title">Son 7 Günün Detayları</h5>
+            <div class="chart-wrapper">
+              <canvas id="dailyStatsChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="chart-container">
+            <h5 class="chart-title">İletişim Dağılımı</h5>
+            <div class="chart-wrapper">
+              <canvas id="contactPieChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEĞERLENDİRMELER -->
+    <div class="settings-card" id="reviewsSection" style="display: none;">
+      <h3 class="settings-title">
+        <i class="fas fa-star me-2"></i>Müşteri Değerlendirmeleri
+        <button type="button" class="btn btn-sm btn-outline-secondary float-end" onclick="window.shopSettings.hideReviews()">
+          <i class="fas fa-times"></i>
+        </button>
+      </h3>
+
+      <!-- Puan Özeti -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="rating-summary">
+            <div class="big-rating" id="bigRating">4.8</div>
+            <div class="rating-stars" id="ratingStars">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p class="rating-count" id="ratingCount">156 değerlendirme</p>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="rating-breakdown" id="ratingBreakdown">
+            <!-- Rating bars will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Son Yorumlar -->
+      <div class="reviews-list" id="reviewsList">
+        <!-- Reviews will be inserted here -->
+      </div>
+    </div>
+
+
+    <!-- HESAP YÖNETİMİ -->
+    <div class="settings-card">
+      <h3 class="settings-title">
+        <i class="fas fa-cog me-2"></i>Hesap Yönetimi
+      </h3>
+
+      <div class="row">
+        <div class="col-md-6">
+          <button type="button" class="btn btn-outline-primary w-100 mb-2" onclick="window.shopSettings.showStatistics()">
+            <i class="fas fa-chart-line me-2"></i>Satış İstatistikleri
+          </button>
+          <button type="button" class="btn btn-outline-primary w-100 mb-2" onclick="window.shopSettings.showReviews()">
+            <i class="fas fa-star me-2"></i>Değerlendirmeler
+          </button>
+          <a href="/profile.html?tab=sales" class="btn btn-outline-success w-100 mb-2">
+            <i class="fas fa-shopping-box me-2"></i>Gelen Siparişler
+          </a>
+        </div>
+        <div class="col-md-6">
+          <button type="button" class="btn btn-outline-secondary w-100 mb-2" onclick="window.shopSettings.pauseShop()">
+            <i class="fas fa-pause me-2"></i>Mağazayı Duraklat
+          </button>
+          <button type="button" class="btn btn-outline-danger w-100 mb-2" onclick="window.shopSettings.closeShop()">
+            <i class="fas fa-trash me-2"></i>Mağazayı Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div data-include="partials/footer.html"></div>
+
+  <!-- JS - Resilient Loading System -->
+  <script src="/js/core-loader.js?v=20250930"></script>
+  <script src="/js/dependency-manager.js?v=20250930"></script>
+
+  <script>
+    // Load page-specific scripts if needed
+    document.addEventListener('dependenciesLoaded', () => {
+      if (window.DependencyManager) {
+        window.DependencyManager.loadPageScripts('shop-settings');
+      }
+    });
+
+    // Initialize page with fallback
+    function initializePage() {
+      if (typeof window.EssentialFunctions?.loadPartials === 'function') {
+        window.EssentialFunctions.loadPartials();
+      } else if (typeof includePartials === 'function') {
+        includePartials();
+      }
+    }
+
+    document.addEventListener('dependenciesLoaded', initializePage);
+
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        console.log('🔧 Using fallback initialization for shop-settings page');
+        initializePage();
+      }
+    }, 2000);
+  </script>
+
+  <script>
+    class ShopSettings {
+      constructor() {
+        this.init();
+      }
+
+      async init() {
+        await this.loadPartials();
+        this.loadCities();
+        this.setupToggles();
+        this.loadShopData();
+        this.setupForms();
+      }
+
+      async loadPartials() {
+        if (typeof includePartials === 'function') {
+          await includePartials();
+          setTimeout(() => {
+            if (typeof window.setupHeaderSearch === 'function') {
+              window.setupHeaderSearch();
+            }
+          }, 100);
+        }
+      }
+
+      loadCities() {
+        const select = document.getElementById('shopCity');
+        if (!select) return;
+
+        const cities = window.CITIES_TR || [
+          'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana',
+          'Konya', 'Gaziantep', 'Mersin', 'Diyarbakır', 'Kayseri', 'Eskişehir'
+        ];
+
+        cities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          select.appendChild(option);
+        });
+      }
+
+      setupToggles() {
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+          toggle.addEventListener('click', async () => {
+            const wasActive = toggle.classList.contains('active');
+            const feature = toggle.dataset.feature;
+            const enabled = !wasActive;
+
+            // Toggle UI immediately
+            toggle.classList.toggle('active');
+
+            try {
+              // Send to backend
+              await this.toggleFeature(feature, enabled);
+              console.log(`✅ Feature ${feature} ${enabled ? 'enabled' : 'disabled'} successfully`);
+            } catch (error) {
+              // Revert UI change on error
+              toggle.classList.toggle('active');
+              alert(`❌ ${feature} özelliği güncellenemedi. Tekrar deneyin.`);
+              console.error('Toggle error:', error);
+            }
+          });
+        });
+      }
+
+      async toggleFeature(feature, enabled) {
+        // Token al
+        let token = localStorage.getItem('token');
+        if (!token) {
+          const cookies = document.cookie.split(';');
+          const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+          if (tokenCookie) {
+            token = tokenCookie.split('=')[1];
+          }
+        }
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(`${window.APP?.API_BASE || ''}/api/shop/toggle-feature`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify({ feature, enabled })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Feature toggle failed');
+        }
+
+        return response.json();
+      }
+
+      async showStatistics() {
+        try {
+          // İstatistik bölümünü göster
+          document.getElementById('statisticsSection').style.display = 'block';
+          document.getElementById('reviewsSection').style.display = 'none';
+
+          // Sayfayı kaydır
+          document.getElementById('statisticsSection').scrollIntoView({ behavior: 'smooth' });
+
+          // API'den veri al
+          let token = localStorage.getItem('token');
+          if (!token) {
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          console.log('🔧 Statistics API Debug:');
+          console.log('  Token found:', !!token);
+          console.log('  Headers:', headers);
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/shop/statistics`, {
+            headers,
+            credentials: 'include'
+          });
+
+          console.log('📊 API Response:', response.status, response.statusText);
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Real statistics loaded:', data);
+            if (data.ok && data.statistics) {
+              this.renderStatistics(data.statistics);
+            } else {
+              alert('İstatistik verisi yüklenemedi.');
+              document.getElementById('statisticsSection').style.display = 'none';
+            }
+          } else {
+            const errorData = await response.text();
+            console.error('❌ Statistics API Error:', response.status, errorData);
+            alert('İstatistik verisi yüklenirken hata oluştu. Lütfen tekrar deneyin.');
+            document.getElementById('statisticsSection').style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Statistics error:', error);
+          alert('İstatistik verisi yüklenirken hata oluştu. Lütfen tekrar deneyin.');
+          document.getElementById('statisticsSection').style.display = 'none';
+        }
+      }
+
+      hideStatistics() {
+        document.getElementById('statisticsSection').style.display = 'none';
+      }
+
+      renderStatistics(stats) {
+        // İstatistik kartlarını güncelle
+        document.getElementById('totalViews').textContent = stats.totals.total_views || 0;
+        document.getElementById('totalContacts').textContent = stats.totals.total_contacts || 0;
+        document.getElementById('totalListingViews').textContent = stats.totals.total_listing_views || 0;
+        document.getElementById('averageRating').textContent = '4.8';
+
+        // Günlük istatistik grafiği
+        this.renderDailyChart(stats.daily);
+
+        // İletişim pie chart
+        this.renderContactPieChart(stats.totals);
+      }
+
+      renderDailyChart(dailyData) {
+        const ctx = document.getElementById('dailyStatsChart');
+
+        // Mevcut chart'ı temizle
+        if (this.dailyChart) {
+          this.dailyChart.destroy();
+        }
+
+        const labels = dailyData.map(d => {
+          const date = new Date(d.stat_date);
+          return date.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric' });
+        });
+
+        this.dailyChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Görüntülenme',
+                data: dailyData.map(d => d.views_count),
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
+              },
+              {
+                label: 'İletişim',
+                data: dailyData.map(d => d.contact_clicks),
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
+              },
+              {
+                label: 'İlan Görüntüleme',
+                data: dailyData.map(d => d.listing_views),
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0,0,0,0.05)'
+                },
+                ticks: {
+                  font: {
+                    size: 11
+                  }
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  font: {
+                    size: 11
+                  }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 15,
+                  usePointStyle: true,
+                  font: {
+                    size: 11
+                  }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                titleFont: {
+                  size: 12
+                },
+                bodyFont: {
+                  size: 11
+                }
+              }
+            },
+            animation: {
+              duration: 1000,
+              easing: 'easeInOutQuart'
+            }
+          }
+        });
+      }
+
+      renderContactPieChart(totals) {
+        const ctx = document.getElementById('contactPieChart');
+
+        // Mevcut chart'ı temizle
+        if (this.contactChart) {
+          this.contactChart.destroy();
+        }
+
+        const contactData = [
+          totals.total_contacts || 0,
+          (totals.total_views || 0) - (totals.total_contacts || 0),
+        ];
+
+        this.contactChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['İletişim Kuranlar', 'Sadece Bakan'],
+            datasets: [{
+              data: contactData,
+              backgroundColor: [
+                '#10b981',
+                '#e5e7eb'
+              ],
+              borderWidth: 2,
+              borderColor: '#ffffff',
+              hoverBorderWidth: 3,
+              hoverOffset: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 15,
+                  usePointStyle: true,
+                  font: {
+                    size: 11
+                  }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                titleFont: {
+                  size: 12
+                },
+                bodyFont: {
+                  size: 11
+                },
+                callbacks: {
+                  label: function(context) {
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
+                    return `${context.label}: ${context.parsed} (${percentage}%)`;
+                  }
+                }
+              }
+            },
+            animation: {
+              duration: 1000,
+              easing: 'easeInOutQuart'
+            }
+          }
+        });
+      }
+
+      async showReviews() {
+        try {
+          // Değerlendirme bölümünü göster
+          document.getElementById('reviewsSection').style.display = 'block';
+          document.getElementById('statisticsSection').style.display = 'none';
+
+          // Sayfayı kaydır
+          document.getElementById('reviewsSection').scrollIntoView({ behavior: 'smooth' });
+
+          // API'den veri al
+          let token = localStorage.getItem('token');
+          if (!token) {
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          console.log('🔧 Reviews API Debug:');
+          console.log('  Token found:', !!token);
+          console.log('  Headers:', headers);
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/shop/reviews`, {
+            headers,
+            credentials: 'include'
+          });
+
+          console.log('📊 Reviews Response:', response.status, response.statusText);
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Real reviews loaded:', data);
+            if (data.ok) {
+              this.renderReviews(data);
+            } else {
+              alert('Değerlendirme verisi yüklenemedi.');
+              document.getElementById('reviewsSection').style.display = 'none';
+            }
+          } else {
+            const errorData = await response.text();
+            console.error('❌ Reviews API Error:', response.status, errorData);
+            alert('Değerlendirme verisi yüklenirken hata oluştu. Lütfen tekrar deneyin.');
+            document.getElementById('reviewsSection').style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Reviews error:', error);
+          alert('Değerlendirme verisi yüklenirken hata oluştu. Lütfen tekrar deneyin.');
+          document.getElementById('reviewsSection').style.display = 'none';
+        }
+      }
+
+      hideReviews() {
+        document.getElementById('reviewsSection').style.display = 'none';
+      }
+
+      renderReviews(data) {
+        const summary = data.summary;
+        const reviews = data.reviews;
+
+        // Genel puan güncelle
+        document.getElementById('bigRating').textContent = parseFloat(summary.average_rating).toFixed(1);
+        document.getElementById('ratingCount').textContent = `${summary.total_reviews} değerlendirme`;
+
+        // Yıldızları güncelle
+        this.updateStars('ratingStars', summary.average_rating);
+
+        // Puan dağılımını render et
+        this.renderRatingBreakdown(summary);
+
+        // Yorumları render et
+        this.renderReviewsList(reviews);
+      }
+
+      updateStars(elementId, rating) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+          const star = document.createElement('i');
+          star.className = i <= rating ? 'fas fa-star' : 'far fa-star';
+          container.appendChild(star);
+        }
+      }
+
+      renderRatingBreakdown(summary) {
+        const container = document.getElementById('ratingBreakdown');
+        container.innerHTML = '';
+
+        const ratings = [
+          { label: '5 yıldız', count: summary.five_star },
+          { label: '4 yıldız', count: summary.four_star },
+          { label: '3 yıldız', count: summary.three_star },
+          { label: '2 yıldız', count: summary.two_star },
+          { label: '1 yıldız', count: summary.one_star }
+        ];
+
+        ratings.forEach(rating => {
+          const percentage = summary.total_reviews > 0 ? (rating.count / summary.total_reviews * 100) : 0;
+
+          const row = document.createElement('div');
+          row.className = 'rating-row';
+
+          row.innerHTML = `
+            <div class="rating-label">${rating.label}</div>
+            <div class="rating-bar">
+              <div class="rating-fill" style="width: ${percentage}%"></div>
+            </div>
+            <div class="rating-percent">${Math.round(percentage)}%</div>
+          `;
+
+          container.appendChild(row);
+        });
+      }
+
+      renderReviewsList(reviews) {
+        const container = document.getElementById('reviewsList');
+        container.innerHTML = '';
+
+        if (reviews.length === 0) {
+          container.innerHTML = '<p class="text-center text-muted">Henüz değerlendirme bulunmuyor.</p>';
+          return;
+        }
+
+        reviews.forEach(review => {
+          const reviewItem = document.createElement('div');
+          reviewItem.className = 'review-item';
+
+          const date = new Date(review.created_at);
+          const formattedDate = date.toLocaleDateString('tr-TR');
+
+          reviewItem.innerHTML = `
+            <div class="review-header">
+              <div class="reviewer-name">${review.reviewer_name}</div>
+              <div class="review-date">${formattedDate}</div>
+            </div>
+            <div class="review-stars">
+              ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+            </div>
+            <p class="review-text">${review.review_text}</p>
+          `;
+
+          container.appendChild(reviewItem);
+        });
+      }
+
+
+
+
+
+      async pauseShop() {
+        if (!confirm('Mağazanızı duraklatmak istediğinizden emin misiniz?\n\nDuraklama sırasında:\n- Mağazanız görünmez olacak\n- Yeni siparişler alamayacaksınız\n- Mevcut siparişleriniz etkilenmez')) {
+          return;
+        }
+
+        try {
+          await this.updateShopStatus('paused');
+          alert('⏸️ Mağazanız başarıyla duraklatıldı.');
+        } catch (error) {
+          alert('❌ Mağaza duraklatılamadı. Tekrar deneyin.');
+        }
+      }
+
+      async closeShop() {
+        if (!confirm('⚠️ DİKKAT: Mağazanızı kapatmak istediğinizden emin misiniz?\n\nMağaza kapatma:\n- Geri alınamaz bir işlemdir\n- Tüm verileriniz silinir\n- Müşterileriniz size ulaşamaz\n\nDevam etmek istiyor musunuz?')) {
+          return;
+        }
+
+        const confirmText = prompt('Onaylamak için "KAPAT" yazın:');
+        if (confirmText !== 'KAPAT') {
+          alert('İşlem iptal edildi.');
+          return;
+        }
+
+        try {
+          await this.updateShopStatus('closed');
+          alert('🚫 Mağazanız kapatıldı.');
+          window.location.href = '/';
+        } catch (error) {
+          alert('❌ Mağaza kapatılamadı. Tekrar deneyin.');
+        }
+      }
+
+      async updateShopStatus(status) {
+        // Token al
+        let token = localStorage.getItem('token');
+        if (!token) {
+          const cookies = document.cookie.split(';');
+          const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+          if (tokenCookie) {
+            token = tokenCookie.split('=')[1];
+          }
+        }
+
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(`${window.APP?.API_BASE || ''}/api/shop/status`, {
+          method: 'PUT',
+          headers,
+          credentials: 'include',
+          body: JSON.stringify({ status })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Status update failed');
+        }
+
+        return response.json();
+      }
+
+      async loadShopData() {
+        try {
+          // Cookie'den token al
+          let token = localStorage.getItem('token');
+          if (!token) {
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/sellers/my-profile`, {
+            headers,
+            credentials: 'include'
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.ok && data.hasShop && data.seller) {
+              this.populateForm(data.seller);
+              this.populateToggles(data.seller);
+            } else if (data.ok && !data.hasShop) {
+              // User doesn't have a shop yet - form will be empty for them to fill
+              console.log('No shop found - user can create one by filling the form');
+            }
+          } else {
+            // If 404 or other error, user can still create a shop by filling the form
+            console.log('No shop profile found - user can create one');
+          }
+        } catch (error) {
+          console.error('Error loading shop data:', error);
+        }
+      }
+
+      populateForm(seller) {
+        document.getElementById('shopName').value = seller.business_name || '';
+        document.getElementById('shopCity').value = seller.city || '';
+        document.getElementById('shopDescription').value = seller.description || '';
+        document.getElementById('shopPhone').value = seller.phone || '';
+        document.getElementById('shopWebsite').value = seller.website || '';
+        document.getElementById('shopWhatsApp').value = seller.whatsapp_phone || '';
+        document.getElementById('shopInstagram').value = seller.instagram_handle || '';
+
+        // Show existing logo if available
+        if (seller.logo_url) {
+          document.getElementById('currentLogo').innerHTML = `
+            <img src="${seller.logo_url}" style="max-width: 100%; max-height: 200px; object-fit: contain;">
+            <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">Mevcut logo</p>
+          `;
+        }
+
+        // Show existing banner if available
+        if (seller.banner_url) {
+          document.getElementById('currentBanner').innerHTML = `
+            <img src="${seller.banner_url}" style="max-width: 100%; max-height: 200px; object-fit: contain;">
+            <p class="text-muted mt-2 mb-0" style="font-size: 0.85rem;">Mevcut banner</p>
+          `;
+        }
+      }
+
+      populateToggles(seller) {
+        // Set toggle switch states based on seller data
+        const boostToggle = document.querySelector('[data-feature="boost"]');
+        const analyticsToggle = document.querySelector('[data-feature="analytics"]');
+        const featuredToggle = document.querySelector('[data-feature="featured"]');
+
+        if (boostToggle && seller.can_boost) {
+          boostToggle.classList.add('active');
+        }
+        if (analyticsToggle && seller.can_use_analytics) {
+          analyticsToggle.classList.add('active');
+        }
+        if (featuredToggle && seller.is_featured) {
+          featuredToggle.classList.add('active');
+        }
+      }
+
+      setupForms() {
+        document.getElementById('generalInfoForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.saveGeneralInfo();
+        });
+
+        // Setup file input change listeners for preview
+        document.getElementById('logoUpload').addEventListener('change', (e) => {
+          this.previewImage(e.target.files[0], 'currentLogo');
+        });
+
+        document.getElementById('bannerUpload').addEventListener('change', (e) => {
+          this.previewImage(e.target.files[0], 'currentBanner');
+        });
+      }
+
+      previewImage(file, containerId) {
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const container = document.getElementById(containerId);
+          container.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px; object-fit: contain;">`;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      async uploadShopMedia() {
+        try {
+          const logoFile = document.getElementById('logoUpload').files[0];
+          const bannerFile = document.getElementById('bannerUpload').files[0];
+
+          if (!logoFile && !bannerFile) {
+            alert('Lütfen en az bir görsel seçin.');
+            return;
+          }
+
+          const formData = new FormData();
+          if (logoFile) formData.append('logo', logoFile);
+          if (bannerFile) formData.append('banner', bannerFile);
+
+          // Token al
+          let token = localStorage.getItem('token');
+          if (!token) {
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+
+          const headers = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/uploads/shop-media`, {
+            method: 'POST',
+            headers,
+            credentials: 'include',
+            body: formData
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            alert('✅ Görseller başarıyla yüklendi!');
+            console.log('Uploaded media:', data.media);
+
+            // Reload shop data to show new images
+            await this.loadShopData();
+          } else {
+            const error = await response.json();
+            alert(`❌ Hata: ${error.error || 'Yükleme başarısız'}`);
+          }
+
+        } catch (error) {
+          console.error('Upload error:', error);
+          alert('❌ Bir hata oluştu. Lütfen tekrar deneyin.');
+        }
+      }
+
+      resetImages() {
+        document.getElementById('logoUpload').value = '';
+        document.getElementById('bannerUpload').value = '';
+        document.getElementById('currentLogo').innerHTML = `
+          <i class="fas fa-upload fa-2x text-muted mb-2"></i>
+          <p class="text-muted mb-0">Logo yüklemek için tıklayın</p>
+          <small class="text-muted">PNG, JPG (max 2MB)</small>
+        `;
+        document.getElementById('currentBanner').innerHTML = `
+          <i class="fas fa-upload fa-2x text-muted mb-2"></i>
+          <p class="text-muted mb-0">Banner yüklemek için tıklayın</p>
+          <small class="text-muted">PNG, JPG (max 5MB)</small>
+        `;
+      }
+
+      async saveGeneralInfo() {
+        const submitBtn = document.querySelector('#generalInfoForm button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Kaydediliyor...';
+
+          const formData = {
+            business_name: document.getElementById('shopName').value,
+            city: document.getElementById('shopCity').value,
+            description: document.getElementById('shopDescription').value,
+            phone: document.getElementById('shopPhone').value,
+            website: document.getElementById('shopWebsite').value,
+            whatsapp_phone: document.getElementById('shopWhatsApp').value,
+            instagram_handle: document.getElementById('shopInstagram').value
+          };
+
+          // Token al
+          let token = localStorage.getItem('token');
+          if (!token) {
+            const cookies = document.cookie.split(';');
+            const tokenCookie = cookies.find(c => c.trim().startsWith('token='));
+            if (tokenCookie) {
+              token = tokenCookie.split('=')[1];
+            }
+          }
+
+          const headers = { 'Content-Type': 'application/json' };
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const response = await fetch(`${window.APP?.API_BASE || ''}/api/shop/general-info`, {
+            method: 'PUT',
+            headers,
+            credentials: 'include',
+            body: JSON.stringify(formData)
+          });
+
+          if (response.ok) {
+            alert('✅ Mağaza bilgileri başarıyla güncellendi!');
+          } else {
+            const error = await response.json();
+            alert(`❌ Hata: ${error.error || 'Güncelleme başarısız'}`);
+          }
+
+        } catch (error) {
+          console.error('Save error:', error);
+          alert('❌ Bir hata oluştu. Lütfen tekrar deneyin.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }
+      }
+    }
+
+    // Initialize when dependencies are loaded
+    function initializeShopSettings() {
+      window.shopSettings = new ShopSettings();
+    }
+
+    document.addEventListener('dependenciesLoaded', initializeShopSettings);
+
+    // Fallback initialization
+    setTimeout(() => {
+      if (!window.dependenciesLoadedTriggered) {
+        initializeShopSettings();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
