@@ -1,0 +1,97 @@
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <!-- DEBUG: Footer yüklendi -->
+    <script>
+      if (window.location.hostname === 'localhost' || window.APP?.DEBUG) {
+        console.log('Footer partial yüklendi - Bootstrap:', typeof bootstrap !== 'undefined');
+      }
+    </script>
+    
+    <!-- Yasal Uyumluluk Bölümü -->
+    <div class="row mb-4">
+      <div class="col-lg-3 col-md-6 mb-3">
+        <h6>🔒 Yasal Uyumluluk</h6>
+        <ul class="list-unstyled">
+          <li><a href="/legal/kvkk.html">KVKK & Gizlilik</a></li>
+          <li><a href="/legal/tax-reports.html">Vergi Raporları</a></li>
+          <li><a href="/legal/complaints.html">Şikayet Sistemi</a></li>
+          <li><a href="/privacy.html">Gizlilik Politikası</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-3">
+        <h6>📄 Yasal Belgeler</h6>
+        <ul class="list-unstyled">
+          <li><a href="/terms.html">Kullanım Şartları</a></li>
+          <li><a href="/legal/distance-sales.html">Mesafeli Satış</a></li>
+          <li><a href="/legal/cookie-policy.html">Çerez Politikası</a></li>
+          <li><a href="/legal/data-processing.html">Veri İşleme</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6 mb-3">
+        <h6>🏢 Platform</h6>
+        <ul class="list-unstyled">
+          <li><a href="/about.html">Hakkımızda</a></li>
+          <li><a href="/contact.html">İletişim</a></li>
+          <li><a href="/help.html">Yardım</a></li>
+          <li><a href="/faq.html">SSS</a></li>
+        </ul>
+      </div>
+
+      <div class="col-lg-3 col-md-6 mb-3">
+        <h6>✨ Güvenlik</h6>
+        <div class="mb-3">
+          <div class="mb-2"><span class="badge bg-success">🔒 SSL Güvenli</span></div>
+          <div class="mb-2"><span class="badge bg-primary">✅ KVKK Uyumlu</span></div>
+          <div class="mb-2"><span class="badge bg-warning text-dark">🏆 KYC Onaylu</span></div>
+        </div>
+        <small style="color: #a0aec0; font-size: 0.8rem;">
+          E-Ticaret Lisansı: 2025/TR001<br>
+          KVKK Kayıt No: 2025-KVKK-001
+        </small>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Alt kısım -->
+    <div class="row align-items-center">
+      <div class="col-lg-8 col-md-12 mb-2">
+        <nav class="d-flex gap-3 flex-wrap mb-2">
+          <a href="/legal/kvkk.html" class="text-muted small">🔒 KVKK</a>
+          <a href="/legal/complaints.html" class="text-muted small">🎧 Destek</a>
+          <a href="/legal/tax-reports.html" class="text-muted small">📊 Vergi</a>
+          <a href="/privacy.html" class="text-muted small">🔐 Gizlilik</a>
+          <a href="/terms.html" class="text-muted small">📃 Şartlar</a>
+        </nav>
+        <div class="text-muted small">
+          © <span id="yCopy"></span> Eskisini Ver Yenisini Al. Tüm hakları saklıdır.
+        </div>
+        <div class="text-muted" style="font-size: 0.8rem; opacity: 0.8;">
+          🇹🇷 Türkiye Cumhuriyeti yasalarına uygun güvenilir takas platformu
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-12 text-lg-end text-center">
+        <div class="mb-2">
+          <span class="badge" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; font-size: 0.9rem; padding: 0.5rem 1rem;">
+            ✨ Güvenli Platform
+          </span>
+        </div>
+        <div class="text-muted" style="font-size: 0.8rem;">
+          🔒 256-bit SSL Şifreleme<br>
+          🛡️ ISO 27001 Sertifikalı
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Yılı otomatik bas
+  (function(){
+    var el = document.getElementById('yCopy');
+    if (el) el.textContent = new Date().getFullYear();
+  })();
+</script>

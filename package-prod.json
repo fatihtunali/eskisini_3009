@@ -1,0 +1,44 @@
+{
+  "name": "eskisini-marketplace",
+  "version": "1.0.0",
+  "description": "Eskisini marketplace application - Production configuration (api.eskisiniveryenisinial.com)",
+  "type": "commonjs",
+  "scripts": {
+    "start": "NODE_ENV=production node backend/server.js",
+    "start:static": "NODE_ENV=production node frontend/server.static.js",
+    "setup-db": "node database/setup.js",
+    "prod": "NODE_ENV=production node backend/server.js",
+    "install:prod": "npm ci --only=production",
+    "health": "node -e \"console.log('Server health check - OK')\"",
+    "migrate": "node database/migrations/run.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "canvas": "^3.2.0",
+    "claude": "^0.1.1",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "glob": "^11.0.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.2",
+    "mysql2": "^3.10.3",
+    "openai": "^5.23.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "marketplace",
+    "ecommerce",
+    "nodejs",
+    "express",
+    "mysql"
+  ],
+  "author": "Eskisini Team",
+  "license": "Private"
+}

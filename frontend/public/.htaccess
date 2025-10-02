@@ -1,0 +1,138 @@
+# Apache configuration for Eskisini marketplace frontend
+# Upload this file to your public_html or frontend root directory
+
+# Enable mod_rewrite
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# ==========================================
+# CACHE CONTROL - Prevent JS/CSS Caching Issues
+# ==========================================
+
+<IfModule mod_headers.c>
+    # Remove ETags (they can cause caching issues)
+    Header unset ETag
+    FileETag None
+
+    # JavaScript files - NO CACHE (always fetch fresh)
+    <FilesMatch "\.(js|mjs)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # CSS files - Short cache (5 minutes)
+    <FilesMatch "\.(css)$">
+        Header set Cache-Control "public, max-age=300, must-revalidate"
+    </FilesMatch>
+
+    # HTML files - NO CACHE
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # Images in /assets folder - Long cache (1 year)
+    <If "%{REQUEST_URI} =~ m#^/assets/#">
+        <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+            Header set Cache-Control "public, max-age=31536000, immutable"
+        </FilesMatch>
+    </If>
+
+    # Images outside /assets - Medium cache (1 day)
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+
+    # Fonts - Long cache (1 year)
+    <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # JSON/Map files - NO CACHE
+    <FilesMatch "\.(json|map)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# ==========================================
+# COMPRESSION - Enable Gzip
+# ==========================================
+
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ==========================================
+# SECURITY HEADERS
+# ==========================================
+
+<IfModule mod_headers.c>
+    # Content Security Policy
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net data:; img-src 'self' data: https: http:; connect-src 'self' https://api.eskisiniveryenisinial.com https://test.eskisiniveryenisinial.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://res.cloudinary.com http://localhost:3000 http://localhost:5500 ws: wss: blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+
+    # X-Frame-Options
+    Header always set X-Frame-Options "DENY"
+
+    # X-Content-Type-Options
+    Header always set X-Content-Type-Options "nosniff"
+
+    # X-XSS-Protection
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer-Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ==========================================
+# MIME TYPES
+# ==========================================
+
+<IfModule mod_mime.c>
+    AddType application/javascript .js .mjs
+    AddType text/css .css
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+</IfModule>
+
+# ==========================================
+# ERROR DOCUMENTS
+# ==========================================
+
+# Custom error pages (optional)
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html
+
+# ==========================================
+# PREVENT DIRECTORY LISTING
+# ==========================================
+
+Options -Indexes
+
+# ==========================================
+# PROTECT SENSITIVE FILES
+# ==========================================
+
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "\.(env|log|md|sql|bak|backup|config)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

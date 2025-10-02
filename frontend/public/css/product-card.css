@@ -1,0 +1,482 @@
+/* ============================================
+   UNIFIED PRODUCT CARD COMPONENT STYLES
+   Single source of truth for all product displays
+   New 2-Row Layout
+   ============================================ */
+
+/* Products List Layout (horizontal cards) */
+.products-list,
+.listings-list,
+.products-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ============================================
+   UNIFIED LISTING CARD (Primary Style)
+   [Image] Row 1: Name + Category | Price
+   [Image] Row 2: Views + Favorite + Shop | Details/Actions
+   ============================================ */
+
+.listing-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.listing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.listing-content {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.listing-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  border: 2px solid #f1f5f9;
+}
+
+/* Info Wrapper - Contains 2 rows */
+.listing-info-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+/* Row 1: Product Name + Category (left) | Price (right) */
+.listing-row-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.listing-left-1 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.listing-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a202c;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.listing-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listing-title a:hover {
+  color: #667eea;
+}
+
+.listing-category {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.listing-right-1 {
+  flex-shrink: 0;
+}
+
+.listing-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #667eea;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Row 2: Views + Favorite + Shop (left) | Details/Actions (right) */
+.listing-row-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.listing-left-2 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.listing-views {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.listing-views i {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.favorite-btn-inline {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.favorite-btn-inline:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #ef4444;
+}
+
+.favorite-btn-inline.active {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.listing-seller {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listing-seller i {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.listing-right-2 {
+  flex-shrink: 0;
+}
+
+/* Action buttons */
+.listing-actions-row,
+.listing-buttons-group {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.btn-add-to-cart {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-add-to-cart:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.listing-actions-row .btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.btn-primary:hover {
+  background: #5568d3;
+  border-color: #5568d3;
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #6b7280;
+}
+
+.btn.ghost:hover {
+  background: #f9fafb;
+  border-color: #cbd5e0;
+}
+
+.btn-outline-warning {
+  background: transparent;
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.btn-outline-warning:hover {
+  background: #fef3c7;
+}
+
+.btn-outline-success {
+  background: transparent;
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.btn-outline-success:hover {
+  background: #d1fae5;
+}
+
+.btn-outline-danger {
+  background: transparent;
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+  background: #fee2e2;
+}
+
+/* Badge styles */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.bg-success {
+  background: #10b981;
+  color: white;
+}
+
+.bg-secondary {
+  background: #6b7280;
+  color: white;
+}
+
+.bg-info {
+  background: #3b82f6;
+  color: white;
+}
+
+.bg-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.bg-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.bg-muted {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 992px) {
+  .listing-content {
+    gap: 1rem;
+  }
+
+  .listing-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .listing-title {
+    font-size: 0.95rem;
+  }
+
+  .listing-price {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .listing-card {
+    padding: 1rem;
+  }
+
+  .listing-content {
+    grid-template-columns: auto 1fr;
+    gap: 0.875rem;
+  }
+
+  .listing-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .listing-row-1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .listing-left-1 {
+    gap: 0.5rem;
+  }
+
+  .listing-title {
+    font-size: 0.9rem;
+  }
+
+  .listing-category {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .listing-price {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .listing-row-2 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .listing-left-2 {
+    gap: 0.75rem;
+  }
+
+  .listing-views,
+  .listing-seller {
+    font-size: 0.75rem;
+  }
+
+  .listing-actions-row {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .listing-actions-row .btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .listing-card {
+    padding: 0.875rem;
+  }
+
+  .listing-content {
+    gap: 0.75rem;
+  }
+
+  .listing-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .listing-title {
+    font-size: 0.85rem;
+  }
+
+  .listing-left-1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+  }
+
+  .listing-price {
+    font-size: 0.95rem;
+  }
+
+  .listing-left-2 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .favorite-btn-inline {
+    width: 24px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .listing-card {
+    padding: 0.75rem;
+  }
+
+  .listing-actions-row {
+    gap: 0.25rem;
+  }
+
+  .listing-actions-row .btn {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
