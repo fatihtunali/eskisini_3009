@@ -1229,7 +1229,7 @@
     // Auto-initialize if user is authenticated
     if (checkAuth()) {
       console.log('🔔 User is authenticated, initializing notification system...');
-      window.NotificationSystem = new NotificationSystem({
+      window.notificationSystem = new NotificationSystem({
         // Configure WebSocket URL based on API base
         websocketUrl: (function() {
           const apiBase = getCorrectApiBase();
@@ -1275,16 +1275,16 @@
     // Listen for auth changes
     document.addEventListener('auth:login', (e) => {
       console.log('🔔 Auth login event received:', e.detail);
-      if (!window.NotificationSystem) {
+      if (!window.notificationSystem) {
         initNotifications();
       }
     });
 
     document.addEventListener('auth:logout', () => {
       console.log('🔔 Auth logout event received');
-      if (window.NotificationSystem) {
-        window.NotificationSystem.destroy();
-        window.NotificationSystem = null;
+      if (window.notificationSystem) {
+        window.notificationSystem.destroy();
+        window.notificationSystem = null;
       }
     });
   }
@@ -1297,7 +1297,7 @@
     initNotifications();
 
     // If notification system didn't initialize and we have retries left, try again
-    if (!window.NotificationSystem && initRetryCount < maxRetries) {
+    if (!window.notificationSystem && initRetryCount < maxRetries) {
       initRetryCount++;
       console.log(`🔔 Notification system init failed, retrying (${initRetryCount}/${maxRetries})...`);
       setTimeout(tryInitNotifications, 1000 * initRetryCount);
@@ -1325,8 +1325,8 @@
     }
 
     // Initialize notifications
-    if (!window.NotificationSystem) {
-      window.NotificationSystem = new NotificationSystem({
+    if (!window.notificationSystem) {
+      window.notificationSystem = new NotificationSystem({
         websocketUrl: (function() {
           const apiBase = getCorrectApiBase();
           if (apiBase.startsWith('https://')) {
@@ -1353,13 +1353,13 @@
     console.log('window.APP:', window.APP);
     console.log('API_BASE:', window.APP?.API_BASE);
     console.log('Current user:', window.currentUser);
-    console.log('Notification system exists:', !!window.NotificationSystem);
+    console.log('Notification system exists:', !!window.notificationSystem);
 
-    if (window.NotificationSystem) {
-      console.log('System options:', window.NotificationSystem.options);
-      console.log('System state:', window.NotificationSystem.state);
+    if (window.notificationSystem) {
+      console.log('System options:', window.notificationSystem.options);
+      console.log('System state:', window.notificationSystem.state);
       console.log('Manually triggering notification fetch...');
-      window.NotificationSystem.fetchNotifications();
+      window.notificationSystem.fetchNotifications();
     } else {
       console.log('No notification system found. Attempting to initialize...');
       initNotifications();
@@ -1368,7 +1368,7 @@
 
   // Test function to manually create different notification types
   window.testNotificationTypes = () => {
-    if (!window.NotificationSystem) {
+    if (!window.notificationSystem) {
       console.log('Notification system not found!');
       return;
     }
@@ -1417,7 +1417,7 @@
     testNotifications.forEach((notification, index) => {
       setTimeout(() => {
         console.log(`Testing ${notification.type}:`, notification);
-        window.NotificationSystem.handleNotification(notification);
+        window.notificationSystem.handleNotification(notification);
       }, index * 2000); // 2 seconds between each test
     });
   };

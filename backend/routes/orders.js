@@ -113,7 +113,7 @@ router.post('/', authRequired, async (req, res) => {
             listingTitle: listing.title,
             amount: (total_minor / 100).toFixed(2),
             currency: currency,
-            action_url: `/profile.html?tab=orders&orderId=${ins.insertId}`
+            action_url: `/profile.html?tab=sales&orderId=${ins.insertId}`
           }
         });
       } catch (notifError) {

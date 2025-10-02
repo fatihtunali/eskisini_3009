@@ -486,10 +486,14 @@ a.dropdown-toggle[href="javascript:void(0)"]:hover {
             console.log('🔔 Notification bell clicked - FULLY ENABLED FOR LOCALHOST');
 
             // Use existing notification system (auto-initialized by notifications.js)
-            if (window.NotificationSystem && window.NotificationSystem.toggleNotificationPanel) {
-              window.NotificationSystem.toggleNotificationPanel();
+            if (window.notificationSystem && typeof window.notificationSystem.toggleNotificationPanel === 'function') {
+              console.log('🔔 Opening notification panel...');
+              window.notificationSystem.toggleNotificationPanel();
             } else {
-              console.warn('🔔 Notification system not available');
+              console.warn('🔔 Notification system not available', {
+                exists: !!window.notificationSystem,
+                hasMethod: window.notificationSystem ? typeof window.notificationSystem.toggleNotificationPanel : 'N/A'
+              });
               alert('Bildirim sistemi henüz hazır değil. Lütfen birkaç saniye bekleyin.');
             }
           });
