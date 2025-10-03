@@ -22,24 +22,36 @@ r.get('/', authRequired, async (req, res) => {
     
     const [notifications] = await pool.query(`
       SELECT id, type, title, body, data, read_at, created_at
-      FROM notifications 
+      FROM notifications
       ${whereClause}
-      ORDER BY created_at DESC 
+      ORDER BY created_at DESC
       LIMIT ? OFFSET ?
     `, [...params, sizeNum, offset]);
-    
+
+    // Parse JSON data field for each notification
+    notifications.forEach(notification => {
+      if (notification.data && typeof notification.data === 'string') {
+        try {
+          notification.data = JSON.parse(notification.data);
+        } catch (e) {
+          console.error('Failed to parse notification data:', e);
+          notification.data = null;
+        }
+      }
+    });
+
     // Unread count
     const [[{ unread_count }]] = await pool.query(
       'SELECT COUNT(*) as unread_count FROM notifications WHERE user_id = ? AND read_at IS NULL',
       [req.user.id]
     );
-    
-    res.json({ 
-      ok: true, 
-      notifications, 
+
+    res.json({
+      ok: true,
+      notifications,
       unread_count,
       page: pageNum,
-      size: sizeNum 
+      size: sizeNum
     });
   } catch (e) {
     console.error('Notifications error:', e);

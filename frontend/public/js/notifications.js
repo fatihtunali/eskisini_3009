@@ -486,6 +486,16 @@
       const newNotifications = [];
 
       notifications.forEach(notification => {
+        // Ensure data field is parsed if it's a string (safety check)
+        if (notification.data && typeof notification.data === 'string') {
+          try {
+            notification.data = JSON.parse(notification.data);
+          } catch (e) {
+            console.error('Failed to parse notification data:', e);
+            notification.data = null;
+          }
+        }
+
         if (!this.state.notifications.has(notification.id)) {
           newNotifications.push(notification);
         }
@@ -794,14 +804,25 @@
      * Handle notification click
      */
     handleNotificationClick(notification) {
+      console.log('🔔 Notification clicked:', {
+        id: notification.id,
+        type: notification.type,
+        title: notification.title,
+        data: notification.data,
+        action_url: notification.data?.action_url
+      });
+
       // Mark as read
       this.markAsRead(notification.id);
 
       // Handle navigation based on type
       if (notification.data && notification.data.action_url) {
+        // Always use action_url if provided (backend determines the correct tab)
+        console.log('🔔 Navigating to action_url:', notification.data.action_url);
         window.location.href = notification.data.action_url;
       } else {
-        // Default navigation based on type
+        // Default navigation based on type when no action_url
+        console.log('🔔 No action_url, using default for type:', notification.type);
         switch (notification.type) {
           case 'trade_offer':
             window.location.href = '/profile.html?tab=trades';
@@ -810,6 +831,7 @@
             window.location.href = '/profile.html?tab=messages';
             break;
           case 'order_update':
+            // Default to orders tab if no action_url provided
             window.location.href = '/profile.html?tab=orders';
             break;
           default:
@@ -984,6 +1006,15 @@
         if (stored) {
           const data = JSON.parse(stored);
           data.notifications.forEach(notification => {
+            // Ensure data field is parsed if it's a string
+            if (notification.data && typeof notification.data === 'string') {
+              try {
+                notification.data = JSON.parse(notification.data);
+              } catch (e) {
+                console.error('Failed to parse stored notification data:', e);
+                notification.data = null;
+              }
+            }
             this.state.notifications.set(notification.id, notification);
           });
           this.updateUnreadCount(data.unreadCount || 0);

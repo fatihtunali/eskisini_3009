@@ -96,13 +96,34 @@ router.post('/', authRequired, async (req, res) => {
       [buyerId]
     );
 
+    // Get notification recipient - if seller is a shop, get shop owner
+    let notificationUserId = sellerId;
+    const [[sellerUser]] = await conn.query(
+      `SELECT id FROM users WHERE id = ?`,
+      [sellerId]
+    );
+
+    // If sellerId is not a user, it might be a shop - get shop owner
+    if (!sellerUser) {
+      const [[shop]] = await conn.query(
+        `SELECT owner_id FROM shops WHERE id = ?`,
+        [sellerId]
+      );
+      if (shop && shop.owner_id) {
+        notificationUserId = shop.owner_id;
+        console.log(`Order notification: seller_id ${sellerId} is a shop, sending notification to owner ${shop.owner_id}`);
+      } else {
+        console.warn(`Order notification: seller_id ${sellerId} not found as user or shop`);
+      }
+    }
+
     await conn.commit();
 
     // Send notification to seller about new order (async, don't block response)
     setImmediate(async () => {
       try {
         await notificationService.createNotification({
-          userId: sellerId,
+          userId: notificationUserId,
           type: 'order_update',
           title: 'Yeni Sipariş',
           body: `${buyer?.full_name || buyer?.username || 'Bir kullanıcı'} "${listing.title}" için sipariş verdi`,
@@ -230,6 +251,12 @@ router.post('/create', authRequired, async (req, res) => {
 
     const orderIds = [];
 
+    // Get buyer info for notifications
+    const [[buyer]] = await conn.query(
+      `SELECT full_name, username FROM users WHERE id = ?`,
+      [userId]
+    );
+
     // Create separate orders for each seller
     for (const [sellerId, items] of Object.entries(sellerGroups)) {
       const orderSubtotal = items.reduce((sum, item) =>
@@ -266,6 +293,52 @@ router.post('/create', authRequired, async (req, res) => {
 
       const orderId = orderResult.insertId;
       orderIds.push(orderId);
+
+      // Get notification recipient - if seller is a shop, get shop owner
+      let notificationUserId = sellerId;
+      const [[sellerUser]] = await conn.query(
+        `SELECT id FROM users WHERE id = ?`,
+        [sellerId]
+      );
+
+      // If sellerId is not a user, it might be a shop - get shop owner
+      if (!sellerUser) {
+        const [[shop]] = await conn.query(
+          `SELECT owner_id FROM shops WHERE id = ?`,
+          [sellerId]
+        );
+        if (shop && shop.owner_id) {
+          notificationUserId = shop.owner_id;
+          console.log(`[Cart Order] seller_id ${sellerId} is a shop, sending notification to owner ${shop.owner_id}`);
+        } else {
+          console.warn(`[Cart Order] seller_id ${sellerId} not found as user or shop`);
+        }
+      }
+
+      // Send notification to seller (async, don't block)
+      const itemTitles = items.map(i => i.title).join(', ');
+      setImmediate(async () => {
+        try {
+          await notificationService.createNotification({
+            userId: notificationUserId,
+            type: 'order_update',
+            title: 'Yeni Sipariş',
+            body: `${buyer?.full_name || buyer?.username || 'Bir kullanıcı'} ${items.length} ürün için sipariş verdi`,
+            data: {
+              orderId: orderId,
+              status: 'pending',
+              buyerName: buyer?.full_name || buyer?.username,
+              itemCount: items.length,
+              itemTitles: itemTitles,
+              amount: (orderTotal / 100).toFixed(2),
+              currency: 'TRY',
+              action_url: `/profile.html?tab=sales&orderId=${orderId}`
+            }
+          });
+        } catch (notifError) {
+          console.error('Failed to send cart order notification:', notifError);
+        }
+      });
 
       // Create order items
       for (const item of items) {
